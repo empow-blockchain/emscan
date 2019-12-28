@@ -1,4 +1,6 @@
 
+import countries from './countries.json'
+
 const Utils = {
     formatCurrency(amount, decimalCount = 8, decimal = ".", thousands = ",") {
         decimalCount = Math.abs(decimalCount);
@@ -33,6 +35,10 @@ const Utils = {
         var sec = a.getSeconds();
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
         return time;
+    },
+
+    countryCodeToContryName(code) {
+        return countries.filter(value => {return value.code === code})[0].name
     }
 }
 

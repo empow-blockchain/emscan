@@ -2,13 +2,34 @@ import Axios from "axios";
 import { API_ENDPOINT } from './constants/index'
 
 const ServerAPI = {
-    getLatestBlock(address) {
+    getLatestBlock() {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getBlock?page=1&pageSize=7`)
+            Axios.get(`${API_ENDPOINT}/getBlocks?page=1&pageSize=7&orderBy=number&orderType=-1`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
     },
+    getListProducers() {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getProducers?page=1&pageSize=100000&orderBy=vote`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getLatestTransaction() {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getTransactions?page=1&pageSize=7&orderBy=blockNumber&orderType=-1`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getTopHolders() {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getAddresses?page=1&pageSize=7&orderBy=balance&orderType=-1`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    }
 }
 
 export default ServerAPI;
