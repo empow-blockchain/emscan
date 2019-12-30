@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
+
+import LoadingIcon from '../assets/images/loading.gif'
+
 import Header from '../components/Header';
 import Footer from '../components/Footer'
 import FlagIcon from '../components/FlagIcon'
@@ -9,6 +12,8 @@ import Proccess from '../components/Proccess'
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
+import LoadingOverlay from 'react-loading-overlay';
+import BlockchainAPI from '../BlockchainAPI';
 
 class HomeController extends Component {
 
@@ -21,7 +26,9 @@ class HomeController extends Component {
             listProducers: [],
             latestTransactions: [],
             topHolders: [],
-            emPrice: 0.001
+            emPrice: 0.001,
+            totalVote: 0,
+            isLoading: true
         };
     };
 
@@ -35,11 +42,25 @@ class HomeController extends Component {
         ServerAPI.getTopHolders().then(topHolders => {
             this.setState({ topHolders })
         })
+        BlockchainAPI.getTotalVote().then(totalVote => {
+            this.setState({ totalVote })
+        })
+
+        let interval = setInterval(() => {
+            if (this.state.listProducers.length !== 0) {
+                this.setState({
+                    isLoading: false
+                })
+                clearInterval(interval)
+            }
+        },100)
     }
 
     renderLatestBlock() {
 
         let { latestBlock, latestBlockNumber, listProducers } = this.state
+
+        if (listProducers.length === 0) return;
 
         if (this.props.block && this.props.block.number !== latestBlockNumber) {
             latestBlock.unshift(this.props.block)
@@ -59,11 +80,10 @@ class HomeController extends Component {
                 </div>
                 <ul className="list-inline table-body">
                     {latestBlock.map((value, index) => {
-
                         let producer = listProducers.filter(producer => { return producer.pubkey === value.witness })
-                        let countryCode = producer[0].loc.toLowerCase()
+                        let countryCode = producer[0].loc ? producer[0].loc.toLowerCase() : "us"
                         let avatar = producer[0].avatar ? producer[0].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
-                        let name = producer[0].name ? producer[0].name : producer.address
+                        let name = producer[0].name ? producer[0].name : producer[0].pubkey
 
                         return (
                             <li key={index} className="table-row one-block">
@@ -142,7 +162,7 @@ class HomeController extends Component {
                         topHolders.map((value, index) => {
 
                             // disable admin address
-                            if (value.address === "EM2ZsE41ZSeukSxhMyLsb3dZWP7fgFt43L7e5b9hXVBGPU7U4") return;
+                            if (value.address === "EM2ZsE41ZSeukSxhMyLsb3dZWP7fgFt43L7e5b9hXVBGPU7U4") return false;
                             let isProducer = listProducers.filter(producer => { return producer.address === value.address }).length > 0 ? true : false
 
                             return (
@@ -174,7 +194,7 @@ class HomeController extends Component {
 
     renderProducer() {
 
-        const { listProducers } = this.state
+        const { listProducers, totalVote } = this.state
 
         return (
             <div className="table table-producer">
@@ -199,10 +219,10 @@ class HomeController extends Component {
                         listProducers.map((value, index) => {
 
                             let avatar = value.avatar ? value.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
-                            let name = value.name ? value.name : value.address
+                            let name = value.name ? value.name : value.pubkey
 
                             return (
-                                <li className="table-row one-producer">
+                                <li key={index} className="table-row one-producer">
                                     <ul className="list-inline">
                                         <li>
                                             <div className="top-number">{index + 1}</div>
@@ -226,28 +246,30 @@ class HomeController extends Component {
                                         </li>
                                         <li>
                                             <div className="vote">
-                                                <p>75,960,000 <span className="time">(50.7%)</span></p>
-                                                <Proccess current={50} limit={100}></Proccess>
+                                                <p>{Utils.formatCurrency(value.votes)} <span className="time">({(value.votes / totalVote * 100).toFixed(2)}%)</span></p>
+                                                <Proccess current={value.votes / totalVote * 100} limit={100}></Proccess>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="status">
-                                                <div className="status-success">Ready</div>
+                                                {value.status === 0 && <div className="status-pending">Pending</div>}
+                                                {value.status === 1 && <div className="status-success">Ready</div>}
+                                                {(value.status === 2 || value.statue === 3) && <div className="status-error">Not Ready</div>}
                                             </div>
                                         </li>
                                         <li>
                                             <div className="block">
-                                                <p>75,960,000</p>
+                                                <p>{Utils.formatCurrency(value.block_produced, 0)}</p>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="block-reward">
-                                                <p>75,960,000 EM</p>
+                                                <p>{Utils.formatCurrency(value.block_reward, 0)} EM</p>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="btn-vote">
-                                                <a href="/wallet/vote" className="btn btn-default">Vote for Producer</a>
+                                                <a href={`/wallet/vote/${value.address}`} className="btn btn-default">Vote for Producer</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -269,24 +291,30 @@ class HomeController extends Component {
         return (
             <Fragment>
                 <Header />
-                <section id="home">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-4">
-                                {this.renderLatestBlock()}
-                            </div>
-                            <div className="col-md-4">
-                                {this.renderLatestTransaction()}
-                            </div>
-                            <div className="col-md-4">
-                                {this.renderTopHolder()}
-                            </div>
-                            <div className="col-md-12">
-                                {this.renderProducer()}
+                <LoadingOverlay
+                    active={this.state.isLoading}
+                    spinner={<img src={LoadingIcon}/>}
+                    className="loading-overlay"
+                >
+                    <section id="home">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-4">
+                                    {this.renderLatestBlock()}
+                                </div>
+                                <div className="col-md-4">
+                                    {this.renderLatestTransaction()}
+                                </div>
+                                <div className="col-md-4">
+                                    {this.renderTopHolder()}
+                                </div>
+                                <div className="col-md-12">
+                                    {this.renderProducer()}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </LoadingOverlay>
                 <Footer />
             </Fragment>
         )

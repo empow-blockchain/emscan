@@ -102,11 +102,11 @@ a {
     margin-right: 5px;
 }
 
-.status-error {
+.status-error::before {
     background-color: #ff0000;
 }
 
-.status-pending {
+.status-pending::before {
     background-color: #ee8f3b;
 }
 
@@ -121,6 +121,29 @@ a {
 
 .btn-default:hover {
     color: $topNumberColor;
+}
+
+.loading-overlay {
+    // height: 300px;
+    overflow: hidden;
+}
+
+._loading_overlay_overlay {
+    background: #ecf0f1;
+    color: $linkColor;
+
+    svg circle {
+        stroke: $linkColor !important;
+    }
+}
+
+._loading_overlay_content {
+    img {
+        width: 100px;
+        height: 100px;
+        display: block;
+        margin: auto;
+    }
 }
 
 body {
@@ -535,6 +558,7 @@ footer {
                     display: inline-block;
                     .logo {
                         width: 100%;
+                        height: 100%;
                         background-color: white;
                         border-radius: 5px;
                         padding: 5px;
