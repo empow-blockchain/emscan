@@ -131,7 +131,7 @@ class HomeController extends Component {
                                     <ActionTag {...value.actions[0]} fromPage="home"></ActionTag>
 
                                     <div className="info">
-                                        <a className="text-truncate" href={`/address/${value.publisher}`}>{value.publisher}</a>
+                                        <a className="text-truncate" href={`/tx/${value.hash}`}>{value.hash}</a>
                                         <p className="time">{moment(value.time / 10 ** 6).fromNow()}</p>
                                     </div>
                                 </li>

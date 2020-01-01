@@ -18,7 +18,7 @@ const ServerAPI = {
     },
     getLatestTransaction() {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getTransactions?page=1&pageSize=7&orderBy=blockNumber&orderType=-1`)
+            Axios.get(`${API_ENDPOINT}/getTransactions/true?page=1&pageSize=7&orderBy=blockNumber&orderType=-1`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
@@ -26,6 +26,27 @@ const ServerAPI = {
     getTopHolders() {
         return new Promise ( (resolve,reject) => {
             Axios.get(`${API_ENDPOINT}/getAddresses?page=1&pageSize=7&orderBy=balance&orderType=-1`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getCountTransaction() {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getCountTransaction`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getTokenInfo(symbol) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getToken/${symbol}`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getAddress(address) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getAddress/${address}`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })

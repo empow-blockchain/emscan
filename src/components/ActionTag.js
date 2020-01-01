@@ -75,6 +75,36 @@ const ActionTag = props => {
         }
     }
 
+    if(contract === "social.empow") {
+        colorClass = "social"
+
+        switch (action_name) {
+            case "follow":
+                content = "Social Follow"
+                break
+            case "unfollow":
+                content = "Social Unfollow"
+                break
+            case "post":
+                content = "Social New Post"
+                break
+            case "like":
+                content = "Social Like"
+                break
+            case "comment":
+                content = "Social Comment"
+                break
+            case "report":
+                content = "Social Report"
+                break
+            case "share":
+                content = "Social Share"
+                break    
+            default:
+                break
+        }
+    }
+
     if (contract === "vote_producer.empow") {
         colorClass = "producer"
 
@@ -84,6 +114,9 @@ const ActionTag = props => {
                 break
             case "applyUnregister":
                 content = "Producer Unregister"
+                break
+            case "approveRegister":
+                content = "Producer Approved"
                 break
             case "updateProducer":
                 content = "Producer Update"
