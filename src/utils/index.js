@@ -39,6 +39,15 @@ const Utils = {
 
     countryCodeToContryName(code) {
         return countries.filter(value => {return value.code === code})[0].name
+    },
+
+    getTransactionErrorMessage(message) {
+        const regex = /Stack tree: \nError: (.*)/gm;
+        const m = regex.exec(message)
+        if(m[1]) {
+            return m[1]
+        }
+        return "Can't get error message"
     }
 }
 

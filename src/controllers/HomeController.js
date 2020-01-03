@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import LoadingIcon from '../assets/images/loading.gif'
 
-import Header from '../components/Header';
-import Footer from '../components/Footer'
 import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
 import Proccess from '../components/Proccess'
@@ -118,6 +116,18 @@ class HomeController extends Component {
 
         const { latestTransactions } = this.state
 
+        if (this.props.block && this.props.block.tx_count > 1 && latestTransactions[0].hash !== this.props.block.transactions[this.props.block.tx_count - 1].hash) {
+
+            for(let i = 1; i < this.props.block.transactions.length; i++) {
+                latestTransactions.unshift(this.props.block.transactions[i])
+                latestTransactions.pop()
+            }
+
+            this.setState({
+                latestTransactions
+            })
+        }
+
         return (
             <div className="table table-transaction">
                 <div className="table-header">
@@ -166,7 +176,7 @@ class HomeController extends Component {
                             let isProducer = listProducers.filter(producer => { return producer.address === value.address }).length > 0 ? true : false
 
                             return (
-                                <li className="table-row one-holder">
+                                <li key={index} className="table-row one-holder">
                                     <div className="info">
                                         <span className="top-number">{index}</span>
                                         <div className="address">
@@ -289,34 +299,30 @@ class HomeController extends Component {
 
     render() {
         return (
-            <Fragment>
-                <Header />
-                <LoadingOverlay
-                    active={this.state.isLoading}
-                    spinner={<img src={LoadingIcon}/>}
-                    className="loading-overlay"
-                >
-                    <section id="home">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    {this.renderLatestBlock()}
-                                </div>
-                                <div className="col-md-4">
-                                    {this.renderLatestTransaction()}
-                                </div>
-                                <div className="col-md-4">
-                                    {this.renderTopHolder()}
-                                </div>
-                                <div className="col-md-12">
-                                    {this.renderProducer()}
-                                </div>
+            <LoadingOverlay
+                active={this.state.isLoading}
+                spinner={<img src={LoadingIcon}/>}
+                className="loading-overlay"
+            >
+                <section id="home">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-4">
+                                {this.renderLatestBlock()}
+                            </div>
+                            <div className="col-md-4">
+                                {this.renderLatestTransaction()}
+                            </div>
+                            <div className="col-md-4">
+                                {this.renderTopHolder()}
+                            </div>
+                            <div className="col-md-12">
+                                {this.renderProducer()}
                             </div>
                         </div>
-                    </section>
-                </LoadingOverlay>
-                <Footer />
-            </Fragment>
+                    </div>
+                </section>
+            </LoadingOverlay>
         )
     }
 }

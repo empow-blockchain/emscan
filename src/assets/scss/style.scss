@@ -62,6 +62,20 @@ a {
     color: #f39c12;
 }
 
+.action-content {
+    .grey {
+        color: $greyColor;
+        margin-left: 5px;
+        &:first-child{
+            margin-left: 0px;
+        }
+    }
+
+    .address {
+        width: 200px;
+    }
+}
+
 .text-truncate {
     width: 100%;
     overflow: hidden;
@@ -132,7 +146,7 @@ a {
 }
 
 .loading-overlay {
-    // height: 300px;
+    min-height: 300px;
     overflow: hidden;
 }
 
@@ -672,6 +686,134 @@ footer {
 
                 a {
                     vertical-align: 7px;
+                }
+            }
+        }
+    }
+}
+
+#transaction-detail {
+    .txhash {
+        display: inline-block;
+        color: $greyColor;
+        font-weight: 700;
+        margin-bottom: 20px;
+        span {
+            font-weight: 300;
+            color: $linkColor;
+        }
+    }
+
+    .btn-copy {
+        vertical-align: 6px;
+        margin-left: 15px;
+        padding: 3px 10px;
+        border-radius: 5px;
+    }
+
+    .tx-info {
+        background-color: white;
+        padding: 30px 20px;
+        border: 1px solid $tableBorderColor;
+
+        ul {
+            margin-top: 15px;
+            &:first-child {
+                margin-top: 0px;
+            }
+            li {
+                display: inline-block;
+            }
+            li:first-child {
+                color: $greyColor;
+                width: 20%;
+            }
+            li:last-child {
+                text-align: left;
+                width: 80%;
+                vertical-align: top;
+            }
+
+            .error-message {
+                font-family: monospace;
+                color: #dc3545;
+            }
+        }
+    }
+
+    .actions {
+        margin-top: 20px;
+        background: white;
+        background-color: white;
+        border: 1px solid $tableBorderColor;
+
+        .tabs {
+            border-bottom: 1px solid $tableBorderColor;
+            li {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 20px;
+                color: $greyColor;
+                cursor: pointer;
+
+                .badge-cirlce {
+                    background-color: $greyColor;
+                    border-radius: 50%;
+                    color: white;
+                    width: 20px;
+                    height: 20px;
+                    font-size: 13px;
+                    vertical-align: 3px;
+                }
+            }
+
+            li.active {
+                color: $navbarColor;
+                border-bottom: 3px solid $navbarColor;
+                .badge-cirlce {
+                    background-color: $navbarColor;
+                }
+            }
+        }
+
+        .actions-content {
+            padding: 15px 20px;
+
+            .one-action {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;;
+                li {
+                    display: inline-block;
+
+                    &:nth-child(2) {
+                        flex-grow: 1;
+                        margin-left: 15px;
+                        margin-right: 15px;
+                    }
+                }
+            }
+
+            .hide-recepeit {
+                margin: 10px 0px;
+                margin-left: 150px;
+                color: $linkColor;
+                cursor: pointer;
+
+                img {
+                    vertical-align: 2px;
+                    margin-right: 10px;
+                }
+            }
+
+            .one-receipt {
+                margin-left: 150px;
+                li {
+                    display: inline-block;
+
+                    &:nth-child(2) {
+                        margin-left: 10px;
+                    }
                 }
             }
         }

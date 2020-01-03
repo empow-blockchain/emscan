@@ -75,7 +75,7 @@ const ActionTag = props => {
         }
     }
 
-    if(contract === "social.empow") {
+    if(contract === "social.empow" || contract === "auth.empow") {
         colorClass = "social"
 
         switch (action_name) {
@@ -99,7 +99,13 @@ const ActionTag = props => {
                 break
             case "share":
                 content = "Social Share"
-                break    
+                break
+            case "addPremiumUsername":
+                content = "Buy Username ($10)"
+                break
+            case "addNormalUsername":
+                content = "Buy Username (Free)"
+                break   
             default:
                 break
         }

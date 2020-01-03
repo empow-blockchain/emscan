@@ -50,6 +50,13 @@ const ServerAPI = {
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
+    },
+    getTransaction(txhash) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getTransaction/${txhash}`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
     }
 }
 

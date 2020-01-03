@@ -60,7 +60,6 @@ class Header extends Component {
         })
 
         ServerAPI.getTokenInfo("em").then(EMTokenInfo => {
-            console.log(EMTokenInfo);
             this.setState({ EMTokenInfo })
         })
 
@@ -106,7 +105,7 @@ class Header extends Component {
                                 <li className="main-menu dropdown">
                                     <div className="line"></div>
                                     <img className="icon" src={DropdownArrowIcon} alt="drop down icon"></img>
-                                    <p className="text-truncate">{addressInfo.address} <span>{addressInfo.balance} EM</span></p>
+                                    <p className="text-truncate">{addressInfo.address} <span>{Utils.formatCurrency(addressInfo.balance, 2)} EM</span></p>
                                     <ul className="dropdown-content">
                                         <li><a href="/wallet/transfer">Transfer</a></li>
                                         <li><a href="/wallet/stake">Stake</a></li>
