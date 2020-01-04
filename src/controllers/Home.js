@@ -45,7 +45,7 @@ class HomeController extends Component {
         })
 
         let interval = setInterval(() => {
-            if (this.state.listProducers.length !== 0) {
+            if (this.state.latestBlockNumber !== 0) {
                 this.setState({
                     isLoading: false
                 })

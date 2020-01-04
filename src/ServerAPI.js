@@ -11,7 +11,7 @@ const ServerAPI = {
     },
     getListProducers() {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getProducers?page=1&pageSize=100000&orderBy=vote`)
+            Axios.get(`${API_ENDPOINT}/getProducers?page=1&pageSize=100000&orderBy=votes&orderType=1`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })

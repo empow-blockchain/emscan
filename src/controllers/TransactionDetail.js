@@ -1,20 +1,16 @@
-import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
 import ReactJson from 'react-json-view'
 
 import LoadingIcon from '../assets/images/loading.gif'
 import upArrowIcon from '../assets/images/up-arrow.png'
 
-import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
 import ActionContent from '../components/ActionContent'
-import Proccess from '../components/Proccess'
 
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
-import BlockchainAPI from '../BlockchainAPI';
 
 class TransactionDetail extends Component {
 
@@ -66,7 +62,7 @@ class TransactionDetail extends Component {
                             <button className="btn btn-default btn-copy">COPY</button>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <div className="tx-info">
+                                    <div className="card tx-info">
                                         <ul className="list-inline">
                                             <li>Time</li>
                                             <li>{moment(info.time / 10 ** 6).fromNow()}</li>
@@ -93,7 +89,7 @@ class TransactionDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-6">
-                                    <div className="tx-info">
+                                    <div className="card tx-info">
                                         <ul className="list-inline">
                                             <li>Gas Used</li>
                                             <li>{Utils.formatCurrency(info.tx_receipt.gas_usage, 0)}</li>
@@ -138,7 +134,7 @@ class TransactionDetail extends Component {
                                             return (
                                                 <ul key={index} className="list-inline one-receipt">
                                                     <li><ActionTag contract={arr[0]} action_name={arr[1]} data={value.content}/></li>
-                                                    <li>To 0x29E5206d2b4258... Amount 34,000.45 EM  Memo test transfer</li>
+                                                    <li className="json">{value.content}</li>
                                                 </ul>
                                             )
                                         })}

@@ -34,7 +34,8 @@ class Header extends Component {
             countTransaction: 0,
             txCount: 0,
             EMTokenInfo: null,
-            addressInfo: null
+            addressInfo: null,
+            searchValue: ""
         }
     };
 
@@ -76,9 +77,21 @@ class Header extends Component {
         }
     }
 
+    onSearch(e) {
+        this.setState({searchValue: e.target.value})
+
+        if(e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
+            window.location = "/address/" + e.target.value
+        }
+
+        if(e.target.value.length === 44) {
+            window.location = "/tx/" + e.target.value
+        }
+    }
+
     render() {
 
-        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo } = this.state
+        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo,searchValue } = this.state
 
         return (
             <header>
@@ -105,7 +118,7 @@ class Header extends Component {
                                 <li className="main-menu dropdown">
                                     <div className="line"></div>
                                     <img className="icon" src={DropdownArrowIcon} alt="drop down icon"></img>
-                                    <p className="text-truncate">{addressInfo.address} <span>{Utils.formatCurrency(addressInfo.balance, 2)} EM</span></p>
+                                    <a href={`/address/${addressInfo.address}`} className="address text-truncate">{addressInfo.address} <span>{Utils.formatCurrency(addressInfo.balance, 2)} EM</span></a>
                                     <ul className="dropdown-content">
                                         <li><a href="/wallet/transfer">Transfer</a></li>
                                         <li><a href="/wallet/stake">Stake</a></li>
@@ -128,12 +141,12 @@ class Header extends Component {
                     <div className="container">
                         <div className="wrapper-search">
                             <img src={SearchIcon} alt="search icon"></img>
-                            <input className="input-search" type="text" placeholder="Search address, tx hash, block number and token..." />
+                            <input onChange={(e) => this.onSearch(e)} value={searchValue} className="input-search" type="text" placeholder="Search address, tx hash, block number and token..." />
                             <Select isSearchable={false} className="select-network" classNamePrefix="select-network" value={this.state.networkSelectValue} options={this.state.networkSelectOptions} onChange={(networkSelectValue) => this.setState({ networkSelectValue })}></Select>
                         </div>
                         <div className="noti">
                             <img src={NotiIcon} alt="noti icon"></img>
-                            <p dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="https://empo.io">Empo - Social Network </a> on Empow Blockchain is ready to test` }}></p>
+                            <div className="html" dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="https://empo.io" target="_blank">Empo - Social Network </a> on Empow Blockchain is ready to test` }}></div>
                         </div>
                     </div>
                 </div>
