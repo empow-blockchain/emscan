@@ -2,6 +2,29 @@
 @import url("https://fonts.googleapis.com/css?family=Rajdhani:300,400,500,600,700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap");
 
+// toast scss
+$toastr-width: 350px !default;
+@import 'react-redux-toastr/src/styles/index';
+.redux-toastr .toastr {
+    min-height: 50px;
+}
+.redux-toastr .toastr .rrt-left-container {
+    width: 50px;
+}
+.redux-toastr .toastr .rrt-left-container .rrt-holder {
+    width: 50px;
+    height: 50px;
+    line-height: 40px;
+    margin-top: -20px;
+}
+.redux-toastr .toastr .rrt-middle-container {
+    margin-left: 50px;
+}
+.close-toastr span {
+    color: white;
+    font-weight: 700;
+}
+
 // VARIABLES
 $backgroundColor: #ecf0f1;
 $navbarColor: #413d5d;
@@ -145,6 +168,77 @@ a {
     color: $topNumberColor;
 }
 
+.btn-color {
+    border: none;
+    padding: 0px 25px;
+    background-image: linear-gradient(269deg, #8e3ddf, #f94f4f);
+    height: 50px;
+    line-height: 50px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #ffffff;
+    display: inline-block;
+    min-width: 200px;
+    font-size: 24px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.btn-color:hover {
+    color: #ffffff;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+}
+
+@keyframes maskBorder {
+    0% {
+        clip: rect(0, 50px, 10px, 0);
+    }
+    20% {
+        clip: rect(0, 200px, 10px, 0);
+    }
+    35% {
+        clip: rect(0, 200px, 10px, 190px);
+    }
+    50% {
+        clip: rect(10px, 200px, 50px, 190px);
+    }
+    60% {
+        clip: rect(40px, 200px, 50px, 190px);
+    }
+    70% {
+        clip: rect(40px, 200px, 50px, 0px);
+    }
+    85% {
+        clip: rect(40px, 10px, 50px, 0px);
+    }
+    90% {
+        clip: rect(0, 10px, 50px, 0px);
+    }
+    100% {
+        clip: rect(0, 10px, 10px, 0px);
+    }
+}
+
+.btn-color-loading {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
+
+.btn-color-loading::after {
+    content: " ";
+    z-index: 5;
+    border-radius: 8px;
+    display: block;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    right: 2px;
+    border: 2px solid white;
+    clip: rect(0, 0, 0, 0);
+    animation: maskBorder 1.2s infinite;
+}
+
 .loading-overlay {
     min-height: 300px;
     overflow: hidden;
@@ -196,6 +290,152 @@ a {
 
         &.active a {
             background-color: #544f77;
+        }
+    }
+}
+
+.card {
+    background-color: white;
+    padding: 30px 20px;
+    border: 1px solid $tableBorderColor;
+    display: block;
+    flex-direction: row;
+    position: relative;
+}
+
+.one-statistic {
+    text-align: center;
+    .title {
+        font-size: 14px;
+        color: $greyColor;
+    }
+
+    .number {
+        font-weight: 600;
+        font-size: 24px;
+    }
+}
+
+.input-default {
+    position: relative;
+    .label {
+        display: block;
+        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        margin-top: 5px;
+        border: none;
+        border: 1px solid $tableBorderColor;
+        padding: 5px 10px;
+        background-color: #f3fdff;
+    }
+
+    .suffix {
+        position: absolute;
+        right: 0px;
+        bottom: 1px;
+        background-color: #cbcbcb;
+        padding: 5px 20px;
+        font-weight: 600;
+    }
+}
+
+.table {
+    width: 100%;
+    background-color: $tableColor;
+    border: 1px solid $tableBorderColor;
+    margin-bottom: 0px;
+
+    .table-header {
+        padding: 10px;
+        border-bottom: 1px solid $tableBorderColor;
+
+        .title {
+            font-size: 14px;
+            color: black;
+            text-transform: uppercase;
+        }
+    }
+
+    .table-title {
+        padding: 10px;
+        border-bottom: 1px solid $tableBorderColor;
+        li {
+            font-size: 14px;
+            color: $greyColor;
+        }
+    }
+
+    .table-body {
+        padding: 0px 10px;
+        .table-row {
+            padding: 10px 0px;
+            border-bottom: 1px solid $tableBorderColor;
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+
+    .table-footer {
+        padding: 10px;
+        border-top: 1px solid $tableBorderColor;
+
+        .view-more {
+            a {
+                color: $greyColor;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.install-wallet-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    top: 0px;
+    left: 0px;
+    z-index: 6;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .title {
+        margin-bottom: 10px;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .note {
+        margin-top: 10px;
+        color: $greyColor;
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    .btn-install-wallet {
+        height: 40px;
+        width: 300px;
+        background-color: #2b84bf;
+        color: white;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0px;
+        line-height: 40px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+        img {
+            height: 32px;
+            float: left;
+            margin-top: 3px;
+            margin-left: 3px;
         }
     }
 }
@@ -500,77 +740,6 @@ footer {
                 }
             }
         }
-    }
-}
-
-.table {
-    width: 100%;
-    background-color: $tableColor;
-    border: 1px solid $tableBorderColor;
-    margin-bottom: 0px;
-
-    .table-header {
-        padding: 10px;
-        border-bottom: 1px solid $tableBorderColor;
-
-        .title {
-            font-size: 14px;
-            color: black;
-            text-transform: uppercase;
-        }
-    }
-
-    .table-title {
-        padding: 10px;
-        border-bottom: 1px solid $tableBorderColor;
-        li {
-            font-size: 14px;
-            color: $greyColor;
-        }
-    }
-
-    .table-body {
-        padding: 0px 10px;
-        .table-row {
-            padding: 10px 0px;
-            border-bottom: 1px solid $tableBorderColor;
-            &:last-child {
-                border-bottom: 0;
-            }
-        }
-    }
-
-    .table-footer {
-        padding: 10px;
-        border-top: 1px solid $tableBorderColor;
-
-        .view-more {
-            a {
-                color: $greyColor;
-                font-weight: 600;
-            }
-        }
-    }
-}
-
-.card {
-    background-color: white;
-    padding: 30px 20px;
-    border: 1px solid $tableBorderColor;
-    display: block;
-    flex-direction: row;
-}
-
-.one-statistic {
-    text-align: center;
-    .title {
-        font-size: 14px;
-        color: $greyColor;
-    }
-
-    .number {
-        font-weight: 600;
-        font-size: 24px;
     }
 }
 
@@ -1088,6 +1257,57 @@ footer {
             height: 150px;
             background-color: $tableBorderColor;
             align-self: center;
+        }
+    }
+}
+
+#wallet-transfer {
+    .card {
+        padding: 20px;
+
+        .amount {
+            margin-top: 30px;
+        }
+
+        .pick-amount {
+            display: inline-block;
+            margin-top: 5px;
+            cursor: pointer;
+            li {
+                width: 30px;
+                height: 20px;
+                text-align: center;
+                line-height: 20px;
+                font-size: 12px;
+                background-color: #dfdfdf;
+                color: $greyColor;
+                display: inline-block;
+                margin-right: 5px;
+            }
+        }
+
+        .balance {
+            float: right;
+            margin-top: 9px;
+        }
+
+        .label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .select-token__control {
+            background-color: #f3fdff;
+            border-radius: 0px;
+            border-color: $tableBorderColor;
+        }
+
+        .memo {
+            margin-top: 30px;
+        }
+
+        .btn-color {
+            margin: 60px auto 10px;
         }
     }
 }

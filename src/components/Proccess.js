@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ActionTag = props => {
+const Process = props => {
 
     const {
         current,
@@ -16,4 +16,4 @@ const ActionTag = props => {
     );
 };
 
-export default ActionTag;
+export default Process;

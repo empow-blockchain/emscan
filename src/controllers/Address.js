@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ReactJson from 'react-json-view'
 
 import LoadingIcon from '../assets/images/loading.gif'
-import upArrowIcon from '../assets/images/up-arrow.png'
 
 import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
@@ -15,7 +14,6 @@ import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI';
-import FlagIconFactory from 'react-flag-icon-css';
 
 class Address extends Component {
 

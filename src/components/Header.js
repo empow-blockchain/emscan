@@ -68,7 +68,15 @@ class Header extends Component {
             const address = await window.empow.enable()
 
             if (address) {
-                const addressInfo = await ServerAPI.getAddress(address)
+
+                let addressInfo = {
+                    address,
+                    balance: 0
+                }
+
+                let result = await ServerAPI.getAddress(address)
+                if(result) addressInfo = result
+                
                 this.props.setAddressInfo(addressInfo)
                 this.setState({
                     addressInfo

@@ -42,11 +42,23 @@ const Utils = {
     },
 
     getTransactionErrorMessage(message) {
-        const regex = /Stack tree: \nError: (.*)/gm;
-        const m = regex.exec(message)
-        if(m[1]) {
-            return m[1]
+        let regex = /Stack tree: \nError: (.*)/gm;
+        let m = regex.exec(message)
+
+        if(m && m[1]) return m[1]
+
+        regex = /error: (.*)/gm;
+        m = regex.exec(message)
+
+        if(m && m[1]) {
+            try {
+                const json = JSON.parse(m[1])
+                return json.message
+            } catch {
+                return m[1]
+            }
         }
+
         return "Can't get error message"
     }
 }
