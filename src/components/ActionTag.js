@@ -6,7 +6,8 @@ const ActionTag = props => {
         contract,
         action_name,
         data,
-        fromPage
+        fromPage,
+        address
     } = props;
 
     let colorClass = "default"
@@ -80,32 +81,41 @@ const ActionTag = props => {
 
         switch (action_name) {
             case "follow":
-                content = "Social Follow"
+                content = "Follow"
                 break
             case "unfollow":
-                content = "Social Unfollow"
+                content = "Unfollow"
                 break
             case "post":
-                content = "Social New Post"
+                content = "New Post"
                 break
             case "like":
-                content = "Social Like"
+                content = "Like"
                 break
             case "comment":
-                content = "Social Comment"
+                content = "Comment"
                 break
             case "report":
-                content = "Social Report"
+                content = "Report Post"
                 break
             case "share":
-                content = "Social Share"
+                content = "Share Post"
                 break
             case "addPremiumUsername":
                 content = "Buy Username ($10)"
                 break
             case "addNormalUsername":
                 content = "Buy Username (Free)"
-                break   
+                break
+            case "selectUsername":
+                content = "Save Username"
+                break
+            case "updateProfile" :
+                content = "Update Profile"
+                break
+            case "signUp":
+                content = "Active Address"
+                break
             default:
                 break
         }
@@ -146,6 +156,16 @@ const ActionTag = props => {
 
     if(fromPage === "address" && contract === "token.empow" && action_name === "transfer") {
         const json = JSON.parse(data)
+
+        if(json[1] === address) {
+            colorClass = "transfer-out"
+            content = "Transfer out"
+        }
+        
+        if(json[2] === address) {
+            colorClass = "transfer-in"
+            content = "Transfer in"
+        }
     }
 
     return (

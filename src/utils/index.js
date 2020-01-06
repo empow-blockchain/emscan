@@ -1,5 +1,6 @@
 
 import countries from './countries.json'
+import convertActionContent from './convertActionContent'
 
 const Utils = {
     formatCurrency(amount, decimalCount = 8, decimal = ".", thousands = ",") {
@@ -38,7 +39,9 @@ const Utils = {
     },
 
     countryCodeToContryName(code) {
-        return countries.filter(value => {return value.code === code})[0].name
+        const filter = countries.filter(value => {return value.code === code})
+        if(filter.length === 0) return "Unknown"
+        return filter[0].name
     },
 
     getTransactionErrorMessage(message) {
@@ -60,7 +63,13 @@ const Utils = {
         }
 
         return "Can't get error message"
-    }
+    },
+
+    properCase(string) {
+        return string.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    },
+
+    convertActionContent: convertActionContent
 }
 
 export default Utils

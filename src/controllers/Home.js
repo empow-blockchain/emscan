@@ -86,7 +86,7 @@ class HomeController extends Component {
                         return (
                             <li key={index} className="table-row one-block">
                                 <div className="block-number">
-                                    <a className="number" href="/block/0">{value.number}</a>
+                                    <a className="number" href={`/block/${value.number}`}>{value.number}</a>
                                     <p className="time">{moment(value.time / 10 ** 6).fromNow()}</p>
                                 </div>
                                 <div className="witness">
@@ -95,8 +95,8 @@ class HomeController extends Component {
                                         <FlagIcon className="flag" code={countryCode}></FlagIcon>
                                     </div>
                                     <div className="name">
-                                        <p className="producer text-truncate">Witness <a href="/producer">{name}</a></p>
-                                        <a href="/block/0" className="txns">{value.tx_count} txns</a>
+                                        <p className="producer text-truncate">Witness <a href={`/address/${producer[0].address}`}>{name}</a></p>
+                                        <a href={`/block/${value.number}`} className="txns">{value.tx_count} txns</a>
                                     </div>
                                 </div>
                             </li>
@@ -105,7 +105,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/block">View More</a>
+                        <a href="/blocks">View More</a>
                     </div>
                 </div>
             </div>
@@ -151,7 +151,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/block">View More</a>
+                        <a href="/txs">View More</a>
                     </div>
                 </div>
             </div>
@@ -185,7 +185,7 @@ class HomeController extends Component {
                                         </div>
                                     </div>
                                     <div className="balance">
-                                        <p className="balance-em">{Utils.formatCurrency(value.balance, 0)} EM</p>
+                                        <p className="balance-em">{Utils.formatCurrency(value.balance, 2)} EM</p>
                                         <p className="balance-usd time">$ {Utils.formatCurrency(value.balance * emPrice, 8)}</p>
                                     </div>
                                 </li>
@@ -290,7 +290,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/block">View More</a>
+                        <a href="/producer">View More</a>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactJson from 'react-json-view'
 
+import LoadingOverlay from 'react-loading-overlay';
 import LoadingIcon from '../assets/images/loading.gif'
 import upArrowIcon from '../assets/images/up-arrow.png'
 
@@ -10,7 +11,7 @@ import ActionContent from '../components/ActionContent'
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
-import LoadingOverlay from 'react-loading-overlay';
+import ButtonCopy from '../components/ButtonCopy'
 
 class TransactionDetail extends Component {
 
@@ -59,7 +60,7 @@ class TransactionDetail extends Component {
                     <section id="transaction-detail">
                         <div className="container">
                             <h3 className="txhash">TxHash <span>{info.hash}</span></h3>
-                            <button className="btn btn-default btn-copy">COPY</button>
+                            <ButtonCopy copyText={info.hash}></ButtonCopy>
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="card tx-info">

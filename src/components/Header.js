@@ -51,7 +51,7 @@ class Header extends Component {
             this.props.setNewBlock(data)
             this.setState({
                 blockNumber: data.number,
-                countTransaction: parseInt(this.state.countTransaction) + parseInt(data.tx_count),
+                countTransaction: parseInt(this.state.countTransaction) + (data.tx_count - 1),
                 txCount: data.tx_count
             })
         })
@@ -117,10 +117,10 @@ class Header extends Component {
                     <div className="container">
                         <ul className="list-inline">
                             <li className="main-menu"><a href="/">Home</a></li>
-                            <li className="main-menu"><a href="/block">Block</a></li>
+                            <li className="main-menu"><a href="/blocks">Block</a></li>
                             <li className="main-menu"><a href="/producer">Producer</a></li>
-                            <li className="main-menu"><a href="/stake">Stake</a></li>
-                            <li className="main-menu"><a href="/token">Token</a></li>
+                            <li className="main-menu"><a href="/wallet/stake">Stake</a></li>
+                            <li className="main-menu"><a href="/token">Txs</a></li>
                             {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
                             {addressInfo &&
                                 <li className="main-menu dropdown">

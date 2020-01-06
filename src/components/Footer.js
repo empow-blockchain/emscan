@@ -33,10 +33,10 @@ class Footer extends Component {
                                 <p className="title">Links</p>
                                 <ul className="list-inline">
                                     <li><a href="/">Home</a></li>
-                                    <li><a href="/block">Block</a></li>
+                                    <li><a href="/blocks">Block</a></li>
                                     <li><a href="/producer">Producer</a></li>
-                                    <li><a href="/wallet">Wallet</a></li>
-                                    <li><a href="/Token">Token</a></li>
+                                    <li><a href="/wallet/stake">Stake</a></li>
+                                    <li><a href="/txs">Txs</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -44,11 +44,11 @@ class Footer extends Component {
                             <div className="footer-links">
                                 <p className="title">Wallet</p>
                                 <ul className="list-inline">
-                                    <li><a href="/wallet/producer">Producer Manager</a></li>
                                     <li><a href="/wallet/transfer">Transfer</a></li>
+                                    <li><a href="/wallet/stake">Stake</a></li>
                                     <li><a href="/wallet/gas">Gas</a></li>
                                     <li><a href="/wallet/ram">Ram</a></li>
-                                    <li><a href="/wallet/stake">Stake</a></li>
+                                    <li><a href="/wallet/producer">Producer</a></li>
                                     <li><a href="/wallet/vote">Vote</a></li>
                                 </ul>
                             </div>

@@ -18,6 +18,14 @@ const BlockchainAPI = {
     getTotalVote() {
         return this.getContractStorage("vote_producer.empow", "candAllKey")
     },
+
+    getRamInfo () {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${BLOCKCHAIN_ENDPOINT}/getRAMInfo`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    }
 }
 
 export default BlockchainAPI;

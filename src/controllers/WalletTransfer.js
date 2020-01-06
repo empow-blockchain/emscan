@@ -5,8 +5,7 @@ import Input from '../components/Input'
 import Select from 'react-select';
 import {toastr} from 'react-redux-toastr'
 import Utils from '../utils/index'
-
-import ChromeLogo from '../assets/images/chrome-logo.svg'
+import InstallWalletOverlay from '../components/InstallWalletOverlay';
 
 class WalletTransfer extends Component {
 
@@ -43,7 +42,7 @@ class WalletTransfer extends Component {
         handler.on("success", (res) => {
             toastr.success('', "Transfer Success", {
                 component: (
-                    <a href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    <a target="_blank" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
             this.setState({ isLoading: false })
@@ -70,13 +69,7 @@ class WalletTransfer extends Component {
                         </div>
                         <div className="col-md-9">
                             <div className="card">
-                                {!addressInfo &&
-                                    <div className="install-wallet-overlay">
-                                        <p className="title">To use all tool of the wallet. Please install Empow Wallet Extension into your browser</p>
-                                        <a className="btn btn-install-wallet" href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" target="_blank"><img src={ChromeLogo}></img>Install Wallet Extension</a>
-                                        <p className="note">*Note: If you are creating a wallet for the first time, transfer some EM to activate your wallet</p>
-                                    </div>
-                                }
+                                {!addressInfo && <InstallWalletOverlay></InstallWalletOverlay>}
                                 <div className="row">
                                     <div className="col-md-6">
                                         <Input className="to" title="Transfer To" type="text" value={to} onChange={(e) => this.setState({ to: e.target.value })}></Input>

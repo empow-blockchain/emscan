@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
 import ReactJson from 'react-json-view'
 
 import LoadingIcon from '../assets/images/loading.gif'
@@ -13,7 +12,8 @@ import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
-import BlockchainAPI from '../BlockchainAPI';
+import BlockchainAPI from '../BlockchainAPI'
+import ButtonCopy from '../components/ButtonCopy'
 
 class Address extends Component {
 
@@ -26,7 +26,9 @@ class Address extends Component {
             producerRank: "---",
             producerVote: 0,
             producerBlock: 0,
-            producerReward: 0
+            producerReward: 0,
+            transactions: [],
+            ramInfo: null
         };
     };
 
@@ -38,12 +40,20 @@ class Address extends Component {
         ServerAPI.getAddress(this.props.match.params.address).then(info => {
             this.setState({ info, isLoading: false })
 
-            if (info.producer_info.length > 0) this.getProducerRank(info.address)
+            if (info.producer_info) this.getProducerRank(info.address)
             if (info.frozen_balances.length > 0) {
                 setInterval(() => this.countDownFrozenBalance(), 1000)
             }
         }).catch(() => {
             this.setState({ notFound: true, isLoading: false })
+        })
+
+        ServerAPI.getAddressTransaction(this.props.match.params.address).then(transactions => {
+            this.setState({ transactions })
+        })
+        
+        BlockchainAPI.getRamInfo().then(ramInfo => {
+            this.setState({ ramInfo })
         })
     }
 
@@ -112,22 +122,22 @@ class Address extends Component {
         let amount = 0
 
         for (let i = 0; i < info.gas_info.pledged_info.length; i++) {
-            if(info.gas_info.pledged_info[i].pledger === info.address)
-            amount += parseFloat(info.gas_info.pledged_info[i].amount)
+            if (info.gas_info.pledged_info[i].pledger === info.address)
+                amount += parseFloat(info.gas_info.pledged_info[i].amount)
         }
 
         return Utils.formatCurrency(amount, 0)
     }
 
-    getPledgedOthers () {
+    getPledgedOthers() {
         const { info } = this.state
         if (!info || info.gas_info.pledged_info.length === 0) return 0;
 
         let amount = 0
 
         for (let i = 0; i < info.gas_info.pledged_info.length; i++) {
-            if(info.gas_info.pledged_info[i].pledger !== info.address)
-            amount += parseFloat(info.gas_info.pledged_info[i].amount)
+            if (info.gas_info.pledged_info[i].pledger !== info.address)
+                amount += parseFloat(info.gas_info.pledged_info[i].amount)
         }
 
         return Utils.formatCurrency(amount, 0)
@@ -135,7 +145,7 @@ class Address extends Component {
 
     render() {
 
-        const { info, isLoading, producerRank, producerVote, producerBlock, producerReward } = this.state
+        const { info, transactions, isLoading, producerRank, producerVote, producerBlock, producerReward, ramInfo } = this.state
 
         return (
             <LoadingOverlay
@@ -149,9 +159,9 @@ class Address extends Component {
                     <section id="address">
                         <div className="container">
                             <h3 className="address-title">Address <span>{info.address}</span></h3>
-                            <button className="btn btn-default btn-copy">COPY</button>
+                            <ButtonCopy copyText={info.address}></ButtonCopy>
 
-                            {info.producer_info.length > 0 && <div className="card producer-info">
+                            {info.producer_info && <div className="card producer-info">
                                 <div className="row">
                                     <div className="col-md-7">
                                         <div className="avatar">
@@ -160,23 +170,23 @@ class Address extends Component {
                                         <div className="info">
                                             <ul className="list-inline">
                                                 <li>Name</li>
-                                                <li className="text-truncate">{info.producer_info[0].name ? info.producer_info[0].name : info.producer_info[0].pubkey}</li>
+                                                <li className="text-truncate">{info.producer_info.name ? info.producer_info.name : info.producer_info.pubkey}</li>
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>Location</li>
-                                                <li><FlagIcon code={info.producer_info[0].loc.toLowerCase()}></FlagIcon> {Utils.countryCodeToContryName(info.producer_info[0].loc)}</li>
+                                                <li><FlagIcon code={info.producer_info.loc.toLowerCase()}></FlagIcon> {Utils.countryCodeToContryName(info.producer_info.loc)}</li>
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>URL</li>
-                                                <li className="text-truncate"><a href={info.producer_info[0].url} target="_blank">{info.producer_info[0].url}</a></li>
+                                                <li className="text-truncate"><a href={info.producer_info.url} target="_blank">{info.producer_info.url}</a></li>
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>Pubkey</li>
-                                                <li className="text-truncate">{info.producer_info[0].pubkey}</li>
+                                                <li className="text-truncate">{info.producer_info.pubkey}</li>
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>Net ID</li>
-                                                <li className="text-truncate">{info.producer_info[0].netId}</li>
+                                                <li className="text-truncate">{info.producer_info.netId}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -215,7 +225,7 @@ class Address extends Component {
                                         </ul>
                                         <ul className="list-inline">
                                             <li>On Stake</li>
-                                            <li>1000 EM <a className="link-to-wallet" href="/wallet/stake">Stake ></a></li>
+                                            <li>{Utils.formatCurrency(info.on_stake, 8)} EM <a className="link-to-wallet" href="/wallet/stake">Stake ></a></li>
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Vote Remain</li>
@@ -287,14 +297,66 @@ class Address extends Component {
                                                 <li>Used Ram</li>
                                                 <li>{Utils.formatCurrency(info.ram_info.used, 0)} Bytes</li>
                                             </ul>
+                                            <ul className="list-inline">
+                                                <li>Buy Price</li>
+                                                <li>{ramInfo ? ramInfo.buy_price.toFixed(8) : "---"} EM/Bytes</li>
+                                            </ul>
+                                            <ul className="list-inline">
+                                                <li>Sell Price</li>
+                                                <li>{ramInfo ? ramInfo.sell_price.toFixed(8) : "---"} EM/Bytes</li>
+                                            </ul>
                                             <p className="link-to-wallet"><a href="/wallet/ram">Buy Ram</a> or <a href="/wallet/ram">Sell Ram</a></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            {
+                                transactions.length > 0 &&
+                                <div className="table table-address-transaction">
+                                    <div className="table-header">
+                                        <p className="title">Transactions</p>
+                                        {/* <Pagination page={page} pageSize={pageSize} count={count}></Pagination> */}
+                                    </div>
+                                    <div className="table-title">
+                                        <ul className="list-inline">
+                                            <li>TxHash</li>
+                                            <li>Time</li>
+                                            <li>Action</li>
+                                            <li>Data</li>
+                                        </ul>
+                                    </div>
+                                    <ul className="list-inline table-body">
+
+                                        {
+                                            transactions.map((value, index) => {
+
+                                                return (
+                                                    <li key={index} className="table-row one-transaction">
+                                                        <ul className="list-inline">
+                                                            <li>
+                                                                <a className="text-truncate" style={{width: "90%"}} href={`/tx/${value.hash}`}>{value.hash}</a>
+                                                            </li>
+                                                            <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
+                                                            <li><ActionTag {...value.actions[0]} fromPage="address" address={info.address}></ActionTag></li>
+                                                            <li>
+                                                                <ActionContent {...value.actions[0]} fromPage="address" address={info.address}></ActionContent>
+                                                                {Utils.convertActionContent(value.actions[0].contract,value.actions[0].action_name, value.actions[0].data, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                    <div className="table-footer">
+                                        {/* <Pagination page={page} pageSize={pageSize} count={count}></Pagination> */}
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </section>
                 }
+
 
             </LoadingOverlay>
         )
