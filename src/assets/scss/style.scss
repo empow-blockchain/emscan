@@ -444,7 +444,7 @@ input:disabled + .suffix {
 }
 
 ._loading_overlay_overlay {
-    background: #ecf0f1;
+    background: #ecf0f1 !important;
     color: $linkColor;
 
     svg circle {
