@@ -25,10 +25,10 @@ class Header extends Component {
         super(props);
 
         this.state = {
-            networkSelectValue: { value: 'testnet', label: 'EMPOW TESTNET' },
+            networkSelectValue: { value: 'testnet', label: "TESTNET" },
             networkSelectOptions: [
-                { value: 'mainnet', label: 'EMPOW MAINNET' },
-                { value: 'testnet', label: 'EMPOW TESTNET' }
+                { value: 'mainnet', label: 'MAINNET' },
+                { value: 'testnet', label: 'TESTNET' }
             ],
             blockNumber: 0,
             countTransaction: 0,
@@ -120,7 +120,7 @@ class Header extends Component {
                             <li className="main-menu"><a href="/blocks">Block</a></li>
                             <li className="main-menu"><a href="/producer">Producer</a></li>
                             <li className="main-menu"><a href="/wallet/stake">Stake</a></li>
-                            <li className="main-menu"><a href="/token">Txs</a></li>
+                            <li className="main-menu"><a href="/txs">Txs</a></li>
                             {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
                             {addressInfo &&
                                 <li className="main-menu dropdown">
@@ -132,8 +132,8 @@ class Header extends Component {
                                         <li><a href="/wallet/stake">Stake</a></li>
                                         <li><a href="/wallet/gas">Gas</a></li>
                                         <li><a href="/wallet/ram">Ram</a></li>
-                                        <li><a href="/wallet/vote">Vote</a></li>
                                         <li><a href="/wallet/producer">Producer</a></li>
+                                        <li><a href="/wallet/vote">Vote</a></li>
                                     </ul>
                                 </li>
                             }

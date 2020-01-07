@@ -102,10 +102,10 @@ const ActionTag = props => {
                 content = "Share Post"
                 break
             case "addPremiumUsername":
-                content = "Buy Username ($10)"
+                content = "Buy Premium Username"
                 break
             case "addNormalUsername":
-                content = "Buy Username (Free)"
+                content = "Buy Free Username"
                 break
             case "selectUsername":
                 content = "Save Username"
@@ -159,12 +159,12 @@ const ActionTag = props => {
 
         if(json[1] === address) {
             colorClass = "transfer-out"
-            content = "Transfer out"
+            content = "Send"
         }
         
         if(json[2] === address) {
             colorClass = "transfer-in"
-            content = "Transfer in"
+            content = "Receive"
         }
     }
 

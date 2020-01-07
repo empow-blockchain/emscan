@@ -10,13 +10,14 @@ const Input = props => {
         onChange,
         suffix,
         placeholder,
-        optional
+        optional,
+        disabled
     } = props;
 
     return (
         <div className={`input-default ${className ? className : ""}`}>
-            <span className="label">{title} {optional ? <span className="time">(optional)</span> : ""} </span>
-            <input type={type} value={value} onChange={onChange} spellCheck={false} placeholder={placeholder}/>
+            {title && <span className="label">{title} {optional ? <span className="time">(optional)</span> : ""} </span>}
+            <input disabled={disabled ? true : false}  type={type} value={value} onChange={onChange} spellCheck={false} placeholder={placeholder}/>
             {suffix && <span className="suffix">{suffix}</span>}
         </div>
     );

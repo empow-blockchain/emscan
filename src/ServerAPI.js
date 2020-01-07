@@ -23,16 +23,16 @@ const ServerAPI = {
             .catch(error => (reject(error.response.data)))
         })
     },
-    getLatestTransaction() {
+    getTransactions(page = 1, pageSize = 7, orderBy = "blockNumber", orderType = -1) {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getTransactions/true?page=1&pageSize=7&orderBy=blockNumber&orderType=-1`)
+            Axios.get(`${API_ENDPOINT}/getTransactions/true?page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderType=${orderType}`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
     },
     getTopHolders() {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getAddresses?page=1&pageSize=7&orderBy=balance&orderType=-1`)
+            Axios.get(`${API_ENDPOINT}/getAddresses?page=1&pageSize=8&orderBy=balance&orderType=-1`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
@@ -58,9 +58,9 @@ const ServerAPI = {
             .catch(error => (reject(error.response.data)))
         })
     },
-    getAddressTransaction(address) {
+    getAddressTransaction(address, page = 1, pageSize = 20) {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getAddressTransaction/${address}?orderBy=time&orderType=-1`)
+            Axios.get(`${API_ENDPOINT}/getAddressTransaction/${address}?page=${page}&pageSize=${pageSize}orderBy=time&orderType=-1`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
@@ -75,6 +75,13 @@ const ServerAPI = {
     getStake(address) {
         return new Promise ( (resolve,reject) => {
             Axios.get(`${API_ENDPOINT}/getStake/${address}?page=1&pageSize=1000000&orderBy=packageId&orderType=-1`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getCountAddressTransaction(address) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getCountAddressTransaction/${address}`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
 import LoadingIcon from '../assets/images/loading.gif'
@@ -34,7 +34,7 @@ class HomeController extends Component {
         ServerAPI.getListProducers().then(listProducers => {
             this.setState({ listProducers })
         })
-        ServerAPI.getLatestTransaction().then(latestTransactions => {
+        ServerAPI.getTransactions().then(latestTransactions => {
             this.setState({ latestTransactions })
         })
         ServerAPI.getTopHolders().then(topHolders => {
@@ -195,7 +195,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/block">View More</a>
+                        <a href="/">View More</a>
                     </div>
                 </div>
             </div>
@@ -301,7 +301,7 @@ class HomeController extends Component {
         return (
             <LoadingOverlay
                 active={this.state.isLoading}
-                spinner={<img src={LoadingIcon}/>}
+                spinner={<img src={LoadingIcon} alt="LoadingIcon"/>}
                 className="loading-overlay"
             >
                 <section id="home">

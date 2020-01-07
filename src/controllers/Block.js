@@ -43,7 +43,7 @@ class Block extends Component {
     }
 
     onChangePage(page) {
-        this.setState({ blocks: [], page })
+        this.setState({ page })
         ServerAPI.getBlocks(page, this.state.pageSize).then(blocks => {
             this.setState({ blocks })
         })

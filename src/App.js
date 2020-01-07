@@ -2,11 +2,16 @@ import React, { Fragment } from 'react';
 import Home from './controllers/Home';
 import Producer from './controllers/Producer'
 import Block from './controllers/Block'
+import Txs from './controllers/Txs'
 import BlockDetail from './controllers/BlockDetail'
 import TransactionDetail from './controllers/TransactionDetail';
 import Address from './controllers/Address';
 import WalletTransfer from './controllers/WalletTransfer';
+import WalletGas from './controllers/WalletGas';
+import WalletRam from './controllers/WalletRam';
 import WalletStake from './controllers/WalletStake';
+import WalletProducer from './controllers/WalletProducer';
+import WalletVote from './controllers/WalletVote';
 import Header from './components/Header'
 import Footer from './components/Footer'
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -26,14 +31,19 @@ const routes = [
         main: () => <Producer />
     },
     {
+        path: '/blocks',
+        exact: false,
+        main: () => <Block />
+    },
+    {
         path: '/block/:number',
         exact: false,
         main: ({ location, match }) => <BlockDetail location={location} match={match} />
     },
     {
-        path: '/blocks',
+        path: '/txs',
         exact: false,
-        main: () => <Block />
+        main: () => <Txs />
     },
     {
         path: '/tx/:hash',
@@ -54,6 +64,26 @@ const routes = [
         path: '/wallet/stake',
         exact: false,
         main: ({ location, match }) => <WalletStake location={location} match={match} />
+    },
+    {
+        path: '/wallet/gas',
+        exact: false,
+        main: ({ location, match }) => <WalletGas location={location} match={match} />
+    },
+    {
+        path: '/wallet/ram',
+        exact: false,
+        main: ({ location, match }) => <WalletRam location={location} match={match} />
+    },
+    {
+        path: '/wallet/producer',
+        exact: false,
+        main: ({ location, match }) => <WalletProducer location={location} match={match} />
+    },
+    {
+        path: '/wallet/vote/:producer?',
+        exact: false,
+        main: ({ location, match }) => <WalletVote location={location} match={match} />
     }
 ];
 

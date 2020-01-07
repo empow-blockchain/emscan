@@ -30,7 +30,7 @@ class WalletTransfer extends Component {
 
         const {tokenSelectValue, to, amount, memo} = this.state
 
-        const tx = window.empow.callABI("token.empow", "transfer", [tokenSelectValue.value, this.props.addressInfo.address, to, amount, memo])
+        const tx = window.empow.callABI("token.empow", "transfer", [tokenSelectValue.value, this.props.addressInfo.address, to, parseFloat(amount).toFixed(8).toString(), memo])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -42,7 +42,7 @@ class WalletTransfer extends Component {
         handler.on("success", (res) => {
             toastr.success('', "Transfer Success", {
                 component: (
-                    <a target="_blank" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
             this.setState({ isLoading: false })

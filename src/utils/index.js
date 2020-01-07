@@ -62,7 +62,7 @@ const Utils = {
             }
         }
 
-        return "Can't get error message"
+        return message
     },
 
     properCase(string) {

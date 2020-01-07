@@ -53,7 +53,7 @@ class TransactionDetail extends Component {
         return (
             <LoadingOverlay
                 active={isLoading}
-                spinner={<img src={LoadingIcon} />}
+                spinner={<img src={LoadingIcon} alt="LoadingIcon"/>}
                 className="loading-overlay"
             >
                 {info &&
@@ -122,14 +122,14 @@ class TransactionDetail extends Component {
                                                 <ul key={index} className="list-inline one-action">
                                                     <li><ActionTag {...value} /></li>
                                                     <li>
-                                                        <ActionContent {...value} />
+                                                        <ActionContent {...value} tx_receipt={info.tx_receipt}/>
                                                         <ReactJson style={{ background: "#f7f7f7", marginTop: 10 }} displayDataTypes={false} name={false} src={JSON.parse(value.data)}></ReactJson>
                                                     </li>
                                                 </ul>
                                             )
                                         })
                                         }
-                                        {info.tx_receipt.receipts.length > 1 && <p href="#" className="hide-recepeit"><img src={upArrowIcon} />Hide Receipts</p>}
+                                        {info.tx_receipt.receipts.length > 1 && <p href="#" className="hide-recepeit"><img src={upArrowIcon} alt="upArrowIcon"/>Hide Receipts</p>}
                                         {info.tx_receipt.receipts.length > 1 && info.tx_receipt.receipts.map((value, index) => {
                                             const arr = value.func_name.split("/")
                                             return (

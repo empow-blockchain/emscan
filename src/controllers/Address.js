@@ -7,6 +7,7 @@ import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
 import ActionContent from '../components/ActionContent'
 import Proccess from '../components/Proccess'
+import Pagination from '../components/Pagination'
 
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
@@ -28,7 +29,10 @@ class Address extends Component {
             producerBlock: 0,
             producerReward: 0,
             transactions: [],
-            ramInfo: null
+            ramInfo: null,
+            count: 0,
+            page: 1,
+            pageSize: 20
         };
     };
 
@@ -38,23 +42,41 @@ class Address extends Component {
         }
 
         ServerAPI.getAddress(this.props.match.params.address).then(info => {
-            this.setState({ info, isLoading: false })
+            BlockchainAPI.getAddress(info.address).then(accountInfo => {
+                info.gas_info = accountInfo.gas_info
+                this.setState({ info, isLoading: false })
 
-            if (info.producer_info) this.getProducerRank(info.address)
-            if (info.frozen_balances.length > 0) {
-                setInterval(() => this.countDownFrozenBalance(), 1000)
-            }
+                this.loadGas()
+                if (info.producer_info) this.getProducerRank(info.address)
+                if (info.frozen_balances.length > 0) {
+                    setInterval(() => this.countDownFrozenBalance(), 1000)
+                }
+            })
         }).catch(() => {
             this.setState({ notFound: true, isLoading: false })
+        })
+
+        ServerAPI.getCountAddressTransaction(this.props.match.params.address).then(count => {
+            this.setState({ count })
         })
 
         ServerAPI.getAddressTransaction(this.props.match.params.address).then(transactions => {
             this.setState({ transactions })
         })
-        
+
         BlockchainAPI.getRamInfo().then(ramInfo => {
             this.setState({ ramInfo })
         })
+    }
+
+    loadGas() {
+        setInterval(() => {
+            const { info } = this.state
+            BlockchainAPI.getAddress(info.address).then(accountInfo => {
+                info.gas_info = accountInfo.gas_info
+                this.setState({ info })
+            })
+        }, 1000)
     }
 
     getProducerRank(address) {
@@ -143,14 +165,21 @@ class Address extends Component {
         return Utils.formatCurrency(amount, 0)
     }
 
+    onChangePage(page) {
+        this.setState({ page })
+        ServerAPI.getAddressTransaction(this.props.match.params.address, page, this.state.pageSize).then(transactions => {
+            this.setState({ transactions })
+        })
+    }
+
     render() {
 
-        const { info, transactions, isLoading, producerRank, producerVote, producerBlock, producerReward, ramInfo } = this.state
+        const { info, transactions, isLoading, producerRank, producerVote, producerBlock, producerReward, ramInfo, page, pageSize, count } = this.state
 
         return (
             <LoadingOverlay
                 active={isLoading}
-                spinner={<img src={LoadingIcon} />}
+                spinner={<img src={LoadingIcon} alt="LoadingIcon" />}
                 className="loading-overlay"
             >
 
@@ -165,7 +194,7 @@ class Address extends Component {
                                 <div className="row">
                                     <div className="col-md-7">
                                         <div className="avatar">
-                                            <img src="https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"></img>
+                                            <img alt="avatar" src="https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"></img>
                                         </div>
                                         <div className="info">
                                             <ul className="list-inline">
@@ -178,7 +207,7 @@ class Address extends Component {
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>URL</li>
-                                                <li className="text-truncate"><a href={info.producer_info.url} target="_blank">{info.producer_info.url}</a></li>
+                                                <li className="text-truncate"><a href={info.producer_info.url} target="_blank" without rel="noopener noreferrer">{info.producer_info.url}</a></li>
                                             </ul>
                                             <ul className="list-inline">
                                                 <li>Pubkey</li>
@@ -315,7 +344,7 @@ class Address extends Component {
                                 <div className="table table-address-transaction">
                                     <div className="table-header">
                                         <p className="title">Transactions</p>
-                                        {/* <Pagination page={page} pageSize={pageSize} count={count}></Pagination> */}
+                                        <Pagination page={page} pageSize={pageSize} count={count} onChangePage={(page) => this.onChangePage(page)}></Pagination>
                                     </div>
                                     <div className="table-title">
                                         <ul className="list-inline">
@@ -334,13 +363,13 @@ class Address extends Component {
                                                     <li key={index} className="table-row one-transaction">
                                                         <ul className="list-inline">
                                                             <li>
-                                                                <a className="text-truncate" style={{width: "90%"}} href={`/tx/${value.hash}`}>{value.hash}</a>
+                                                                <a className="text-truncate" style={{ width: "90%" }} href={`/tx/${value.hash}`}>{value.hash}</a>
                                                             </li>
                                                             <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
                                                             <li><ActionTag {...value.actions[0]} fromPage="address" address={info.address}></ActionTag></li>
                                                             <li>
-                                                                <ActionContent {...value.actions[0]} fromPage="address" address={info.address}></ActionContent>
-                                                                {Utils.convertActionContent(value.actions[0].contract,value.actions[0].action_name, value.actions[0].data, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
+                                                                <ActionContent {...value.actions[0]} tx_receipt={value.tx_receipt}  fromPage="address" address={info.address}></ActionContent>
+                                                                {Utils.convertActionContent(value.actions[0].contract, value.actions[0].action_name, value.actions[0].data, value.tx_receipt, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -349,7 +378,7 @@ class Address extends Component {
                                         }
                                     </ul>
                                     <div className="table-footer">
-                                        {/* <Pagination page={page} pageSize={pageSize} count={count}></Pagination> */}
+                                        <Pagination page={page} pageSize={pageSize} count={count} onChangePage={(page) => this.onChangePage(page)}></Pagination>
                                     </div>
                                 </div>
                             }

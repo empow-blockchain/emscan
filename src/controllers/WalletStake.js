@@ -106,7 +106,7 @@ class WalletStake extends Component {
     }
 
     async componentDidUpdate(prevProps) {
-        if (prevProps !== this.props && this.props.addressInfo && this.props.addressInfo.address) {
+        if (!_.isEqual(prevProps,this.props)) {
             this.loadListStake()
         }
     }
@@ -152,7 +152,7 @@ class WalletStake extends Component {
         handler.on("success", (res) => {
             toastr.success('', "Stake Success", {
                 component: (
-                    <a target="_blank" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
             this.setState({ isLoading: false })
@@ -174,7 +174,7 @@ class WalletStake extends Component {
         handler.on("success", (res) => {
             toastr.success('', "Withdraw Success", {
                 component: (
-                    <a target="_blank" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
             this.loadListStake(true)
@@ -195,7 +195,7 @@ class WalletStake extends Component {
         handler.on("success", (res) => {
             toastr.success('', "Unstake Success", {
                 component: (
-                    <a target="_blank" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
             this.loadListStake(true)
@@ -310,8 +310,8 @@ class WalletStake extends Component {
                             }
                         </div>
                     </div>
-                </div >
-            </section >
+                </div>
+            </section>
         )
     }
 }

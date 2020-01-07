@@ -25,6 +25,14 @@ const BlockchainAPI = {
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
+    },
+
+    getAddress(address) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${BLOCKCHAIN_ENDPOINT}/getAccount/${address}/true`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
     }
 }
 

@@ -6,14 +6,11 @@ import LoadingIcon from '../assets/images/loading.gif'
 import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
 import ActionContent from '../components/ActionContent'
-import Proccess from '../components/Proccess'
 
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
-import BlockchainAPI from '../BlockchainAPI'
-import ButtonCopy from '../components/ButtonCopy'
 
 class BlockDetail extends Component {
 
@@ -51,12 +48,12 @@ class BlockDetail extends Component {
         const { info, isLoading } = this.state
 
         if (info)
-            var witnessInfo = info.witness_info[0]
+            var witnessInfo = info.witness_info
 
         return (
             <LoadingOverlay
                 active={isLoading}
-                spinner={<img src={LoadingIcon} />}
+                spinner={<img src={LoadingIcon} alt="LoadingIcon"/>}
                 className="loading-overlay"
             >
                 {
@@ -150,8 +147,8 @@ class BlockDetail extends Component {
                                                             <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
                                                             <li><ActionTag {...value.actions[0]} fromPage="address" address={info.address}></ActionTag></li>
                                                             <li>
-                                                                <ActionContent {...value.actions[0]} fromPage="address" address={info.address}></ActionContent>
-                                                                {Utils.convertActionContent(value.actions[0].contract, value.actions[0].action_name, value.actions[0].data, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
+                                                                <ActionContent {...value.actions[0]} tx_receipt={value.tx_receipt} ></ActionContent>
+                                                                {Utils.convertActionContent(value.actions[0].contract, value.actions[0].action_name, value.actions[0].data, value.tx_receipt) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
                                                             </li>
                                                         </ul>
                                                     </li>
