@@ -50,12 +50,12 @@ class WalletGas extends Component {
         }
     }
 
-    buyRam() {
+    pledgeGas() {
         this.setState({ isBuyLoading: true })
 
         const { buyAmount } = this.state
 
-        const tx = window.empow.callABI("ram.empow", "buy", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(buyAmount)])
+        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(buyAmount)])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -77,12 +77,12 @@ class WalletGas extends Component {
         })
     }
 
-    sellRam() {
+    unpledgeGas() {
         this.setState({ isSellLoading: true })
 
         const { sellAmount } = this.state
 
-        const tx = window.empow.callABI("ram.empow", "sell", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(sellAmount)])
+        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(sellAmount)])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -190,7 +190,7 @@ class WalletGas extends Component {
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - buyAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
                                                 </div>
                                             </div>
-                                            <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.buyRam()}>Pledge Gas</button>
+                                            <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.pledgeGas()}>Pledge Gas</button>
                                         </div>
                                         <div className="line">
                                             <span></span>
@@ -212,7 +212,7 @@ class WalletGas extends Component {
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + this.getSelfPledged() / gasRatio).toFixed(8)} suffix="EM"></Input>
                                                 </div>
                                             </div>
-                                            <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.sellRam()}>Unpledge Gas</button>
+                                            <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.unpledgeGas()}>Unpledge Gas</button>
                                         </div>
                                     </Fragment>
                                 }
