@@ -55,7 +55,7 @@ class WalletGas extends Component {
 
         const { buyAmount } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(buyAmount)])
+        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount).toFixed(8).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -82,7 +82,7 @@ class WalletGas extends Component {
 
         const { sellAmount } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseInt(sellAmount)])
+        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount).toFixed(8).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
