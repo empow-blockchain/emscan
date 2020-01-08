@@ -21,7 +21,8 @@ class WalletGas extends Component {
             isSellLoading: false,
             ramInfo: null,
             buyAmount: 0,
-            sellAmount: 0
+            sellAmount: 0,
+            gasRatio: 100000
         };
     };
 
@@ -53,9 +54,9 @@ class WalletGas extends Component {
     pledgeGas() {
         this.setState({ isBuyLoading: true })
 
-        const { buyAmount } = this.state
+        const { buyAmount,gasRatio } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount).toFixed(8).toString()])
+        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount / gasRatio).toFixed(8).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -80,9 +81,9 @@ class WalletGas extends Component {
     unpledgeGas() {
         this.setState({ isSellLoading: true })
 
-        const { sellAmount } = this.state
+        const { sellAmount,gasRatio } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount).toFixed(8).toString()])
+        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount / gasRatio).toFixed(8).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -134,10 +135,8 @@ class WalletGas extends Component {
 
     render() {
 
-        const { buyAmount, sellAmount, isBuyLoading, isSellLoading } = this.state
+        const { buyAmount, sellAmount, isBuyLoading, isSellLoading,gasRatio } = this.state
         const { addressInfo } = this.props
-
-        const gasRatio = 100000
 
         return (
             <section id="wallet-ram">
@@ -184,7 +183,7 @@ class WalletGas extends Component {
                                             />
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
+                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="GAS"></Input>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - buyAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
@@ -206,7 +205,7 @@ class WalletGas extends Component {
                                             />
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
+                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="GAS"></Input>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + this.getSelfPledged() / gasRatio).toFixed(8)} suffix="EM"></Input>
