@@ -79,7 +79,7 @@ class WalletRam extends Component {
         })
 
         handler.on("success", (res) => {
-            toastr.success('', "Buy Ram Success", {
+            toastr.success('', "Sell Ram Success", {
                 component: (
                     <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )

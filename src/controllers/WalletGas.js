@@ -56,7 +56,7 @@ class WalletGas extends Component {
 
         const { buyAmount,gasRatio } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount / gasRatio).toFixed(8).toString()])
+        const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount / gasRatio).toFixed(2).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -66,7 +66,7 @@ class WalletGas extends Component {
         })
 
         handler.on("success", (res) => {
-            toastr.success('', "Buy Ram Success", {
+            toastr.success('', "Pledge Gas Success", {
                 component: (
                     <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
@@ -83,7 +83,7 @@ class WalletGas extends Component {
 
         const { sellAmount,gasRatio } = this.state
 
-        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount / gasRatio).toFixed(8).toString()])
+        const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount / gasRatio).toFixed(2).toString()])
         tx.addApprove("*", "unlimited")
         const handler = window.empow.signAndSend(tx)
 
@@ -93,7 +93,7 @@ class WalletGas extends Component {
         })
 
         handler.on("success", (res) => {
-            toastr.success('', "Buy Ram Success", {
+            toastr.success('', "Unpledge Gas Success", {
                 component: (
                     <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
@@ -106,28 +106,28 @@ class WalletGas extends Component {
     }
 
     getSelfPledged() {
-        const { accountInfo } = this.props
-        if (!accountInfo || accountInfo.gas_info.pledged_info.length === 0) return 0;
+        const { addressInfo,  } = this.props
+        if (!addressInfo || addressInfo.gas_info.pledged_info.length === 0) return 0;
 
         let amount = 0
 
-        for (let i = 0; i < accountInfo.gas_info.pledged_info.length; i++) {
-            if (accountInfo.gas_info.pledged_info[i].pledger === accountInfo.address)
-                amount += parseFloat(accountInfo.gas_info.pledged_info[i].amount)
+        for (let i = 0; i < addressInfo.gas_info.pledged_info.length; i++) {
+            if (addressInfo.gas_info.pledged_info[i].pledger === addressInfo.address)
+                amount += parseFloat(addressInfo.gas_info.pledged_info[i].amount)
         }
 
         return amount
     }
 
     getPledgedOthers() {
-        const { accountInfo } = this.state
-        if (!accountInfo || accountInfo.gas_info.pledged_info.length === 0) return 0;
+        const { addressInfo } = this.state
+        if (!addressInfo || addressInfo.gas_info.pledged_info.length === 0) return 0;
 
         let amount = 0
 
-        for (let i = 0; i < accountInfo.gas_info.pledged_info.length; i++) {
-            if (accountInfo.gas_info.pledged_info[i].pledger !== accountInfo.address)
-                amount += parseFloat(accountInfo.gas_info.pledged_info[i].amount)
+        for (let i = 0; i < addressInfo.gas_info.pledged_info.length; i++) {
+            if (addressInfo.gas_info.pledged_info[i].pledger !== addressInfo.address)
+                amount += parseFloat(addressInfo.gas_info.pledged_info[i].amount)
         }
 
         return amount
@@ -198,7 +198,7 @@ class WalletGas extends Component {
                                             <p className="label">UNPLEDGE GAS</p>
                                             <Slider
                                                 min={0}
-                                                max={this.getSelfPledged()}
+                                                max={this.getSelfPledged() * gasRatio}
                                                 step={1}
                                                 value={sellAmount}
                                                 onChange={(value) => this.setState({ sellAmount: value })}
@@ -208,7 +208,7 @@ class WalletGas extends Component {
                                                     <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="GAS"></Input>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + this.getSelfPledged() / gasRatio).toFixed(8)} suffix="EM"></Input>
+                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + sellAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
                                                 </div>
                                             </div>
                                             <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.unpledgeGas()}>Unpledge Gas</button>
