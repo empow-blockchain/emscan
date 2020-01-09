@@ -155,14 +155,12 @@ const ActionTag = props => {
     }
 
     if(fromPage === "address" && contract === "token.empow" && action_name === "transfer") {
-        const json = JSON.parse(data)
-
-        if(json[1] === address) {
+        if(data[1] === address) {
             colorClass = "transfer-out"
             content = "Send"
         }
         
-        if(json[2] === address) {
+        if(data[2] === address) {
             colorClass = "transfer-in"
             content = "Receive"
         }

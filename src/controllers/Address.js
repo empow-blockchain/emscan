@@ -369,7 +369,7 @@ class Address extends Component {
                                                             <li><ActionTag {...value.actions[0]} fromPage="address" address={info.address}></ActionTag></li>
                                                             <li>
                                                                 <ActionContent {...value.actions[0]} tx_receipt={value.tx_receipt}  fromPage="address" address={info.address}></ActionContent>
-                                                                {Utils.convertActionContent(value.actions[0].contract, value.actions[0].action_name, value.actions[0].data, value.tx_receipt, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={JSON.parse(value.actions[0].data)}></ReactJson>}
+                                                                {Utils.convertActionContent(value.actions[0].contract, value.actions[0].action_name, value.actions[0].data, value.tx_receipt, "address", info.address) === "" && <ReactJson collapsed={true} displayDataTypes={false} name={false} src={value.actions[0].data}></ReactJson>}
                                                             </li>
                                                         </ul>
                                                     </li>

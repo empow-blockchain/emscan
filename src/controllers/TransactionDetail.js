@@ -123,7 +123,7 @@ class TransactionDetail extends Component {
                                                     <li><ActionTag {...value} /></li>
                                                     <li>
                                                         <ActionContent {...value} tx_receipt={info.tx_receipt}/>
-                                                        <ReactJson style={{ background: "#f7f7f7", marginTop: 10 }} displayDataTypes={false} name={false} src={JSON.parse(value.data)}></ReactJson>
+                                                        <ReactJson style={{ background: "#f7f7f7", marginTop: 10 }} displayDataTypes={false} name={false} src={value.data}></ReactJson>
                                                     </li>
                                                 </ul>
                                             )
