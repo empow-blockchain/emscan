@@ -137,7 +137,7 @@ class TransactionDetail extends Component {
                                             return (
                                                 <ul key={index} className="list-inline one-receipt">
                                                     <li><ActionTag contract={arr[0]} action_name={arr[1]} data={value.content}/></li>
-                                                    <li className="json">{value.content}</li>
+                                                    <li className="json">{JSON.stringify(value.content)}</li>
                                                 </ul>
                                             )
                                         })}

@@ -29,6 +29,9 @@ const ActionTag = props => {
             case "create":
                 content = "Create Token"
                 break
+            case "destroy":
+                content = "Burn Token"
+                break
             default:
                 break
         }
@@ -76,7 +79,7 @@ const ActionTag = props => {
         }
     }
 
-    if(contract === "social.empow" || contract === "auth.empow") {
+    if (contract === "social.empow" || contract === "auth.empow") {
         colorClass = "social"
 
         switch (action_name) {
@@ -116,7 +119,7 @@ const ActionTag = props => {
             case "selectUsername":
                 content = "Save Username"
                 break
-            case "updateProfile" :
+            case "updateProfile":
                 content = "Update Profile"
                 break
             case "signUp":
@@ -127,7 +130,7 @@ const ActionTag = props => {
         }
     }
 
-    if (contract === "vote_producer.empow") {
+    if (contract === "vote_producer.empow" || contract === "bonus.empow") {
         colorClass = "producer"
 
         switch (action_name) {
@@ -158,18 +161,21 @@ const ActionTag = props => {
             case "candidateWithdraw":
                 content = "Withdraw Vote Reward"
                 break
+            case "exchangeEMPOW":
+                content = "Withdraw Block Reward"
+                break
             default:
                 break
         }
     }
 
-    if(fromPage === "address" && contract === "token.empow" && action_name === "transfer") {
-        if(data[1] === address) {
+    if (fromPage === "address" && contract === "token.empow" && action_name === "transfer") {
+        if (data[1] === address) {
             colorClass = "transfer-out"
             content = "Send"
         }
-        
-        if(data[2] === address) {
+
+        if (data[2] === address) {
             colorClass = "transfer-in"
             content = "Receive"
         }

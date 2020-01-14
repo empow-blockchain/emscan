@@ -32,19 +32,35 @@ class WalletVote extends Component {
     };
 
     componentDidMount() {
+        this.getVoteInfo()
+        this.getProducerOptions()
+    }
 
-        let producer = false
-
-        if (this.props.match || this.props.match.params || this.props.match.params.producer) {
-            producer = this.props.match.params.producer
+    componentDidUpdate(prevProps) {
+        if (_.isEqual(prevProps, this.props)) {
+            return;
         }
 
+        this.getVoteInfo()
+        this.getProducerOptions()
+    }
+
+    getProducerOptions () {
+
         const { listProducer } = this.props
+        let producerOnParam = null;
+
+        if(!listProducer) return;
+
+        if (this.props.match || this.props.match.params || this.props.match.params.producer) {
+            producerOnParam = this.props.match.params.producer
+        }
+
         let producerOptions = []
 
         for (let i = 0; i < listProducer.length; i++) {
 
-            if (producer && listProducer[i].address === producer) {
+            if (producerOnParam && listProducer[i].address === producerOnParam) {
                 this.setState({
                     selectedProducer: {
                         value: listProducer[i],
@@ -77,11 +93,7 @@ class WalletVote extends Component {
         this.setState({ producerOptions })
     }
 
-    componentDidUpdate(prevProps) {
-        if (_.isEqual(prevProps, this.props)) {
-            return;
-        }
-
+    getVoteInfo () {
         if (this.props.addressInfo) {
             const voteBalance = this.props.addressInfo.token && this.props.addressInfo.token.vote ? this.props.addressInfo.token.vote : 0
             const voted = this.getVoted(this.props.addressInfo.vote_infos)

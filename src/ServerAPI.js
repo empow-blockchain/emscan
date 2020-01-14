@@ -85,6 +85,13 @@ const ServerAPI = {
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
+    },
+    getBlockRewardWithdrawn(address) {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getBlockRewardWithdrawn/${address}`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
     }
 }
 

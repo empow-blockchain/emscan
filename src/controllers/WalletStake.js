@@ -34,42 +34,32 @@ class WalletStake extends Component {
     componentDidMount() {
         ServerAPI.getBlocks(1, 1).then(block => {
             this.setState({ lastBlockNumber: block[0].number })
-        })
 
-        setInterval(() => {
-            if (this.state.listStake.length > 0) {
-                this.calcWithdrawCountdown()
-            }
-        }, 1000)
+            this.getStakeInfo()
+            this.calcWithdrawCountdown()
+        })
     }
 
-    calcWithdrawCountdown() {
-        const { listStake } = this.state
-        let now = new Date().getTime();
 
-        for (let i = 0; i < listStake.length; i++) {
-            if (listStake[i].canWithdraw === 0 && listStake[i].unstake === false) {
-                const canWithdrawTime = (listStake[i].lastWithdrawTime / 10 ** 6) + (24 * 60 * 60 * 1000)
-                const distance = canWithdrawTime - now;
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                listStake[i].withdrawCountDown = `${hours}h ${minutes}m ${seconds}s`
-            }
+    async componentDidUpdate(prevProps) {
+        if (_.isEqual(prevProps, this.props)) {
+            return;
         }
 
-        this.setState({ listStake })
+        this.getStakeInfo()
     }
 
-    loadListStake(loop = false) {
+    getStakeInfo(loop = false) {
+
+        if (!this.props.addressInfo) return;
 
         ServerAPI.getStake(this.props.addressInfo.address).then(listStake => {
 
-            if (_.isEqual(listStake,this.state.listStake)) {
+            if (_.isEqual(listStake, this.state.listStake)) {
                 if (!loop) return
                 else {
                     setTimeout(() => {
-                        this.loadListStake()
+                        this.getStakeInfo()
                     }, 1000)
                 }
             }
@@ -105,10 +95,28 @@ class WalletStake extends Component {
         })
     }
 
-    async componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps,this.props)) {
-            this.loadListStake()
+    calcWithdrawCountdown() {
+        const { listStake } = this.state
+        let now = new Date().getTime();
+
+        if (listStake.length > 0) {
+            for (let i = 0; i < listStake.length; i++) {
+                if (listStake[i].canWithdraw === 0 && listStake[i].unstake === false) {
+                    const canWithdrawTime = (listStake[i].lastWithdrawTime / 10 ** 6) + (24 * 60 * 60 * 1000)
+                    const distance = canWithdrawTime - now;
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    listStake[i].withdrawCountDown = `${hours}h ${minutes}m ${seconds}s`
+                }
+            }
+
+            this.setState({ listStake })
         }
+
+        setTimeout(() => {
+            this.calcWithdrawCountdown()
+        }, 1000)
     }
 
     calcHasWithdraw(amount, startBlock, lastBlockWithdraw) {
@@ -256,7 +264,7 @@ class WalletStake extends Component {
                                 <div className="table table-packages">
                                     <div className="table-header">
                                         <p className="title">PACKAGES</p>
-                                        <div className="show-unstaked" onClick={() => this.setState({hideUnstaked: !hideUnstaked})}>
+                                        <div className="show-unstaked" onClick={() => this.setState({ hideUnstaked: !hideUnstaked })}>
                                             <Switch height={14} width={30} onColor="#413d5d" uncheckedIcon={false} checkedIcon={false} checked={hideUnstaked} />
                                             <span>Hide Unstaked</span>
                                         </div>
@@ -276,7 +284,7 @@ class WalletStake extends Component {
                                         {
                                             listStake.map((value, index) => {
 
-                                                if(hideUnstaked && value.unstake) return null 
+                                                if (hideUnstaked && value.unstake) return null
 
                                                 return (
                                                     <li key={index} className="table-row one-package">

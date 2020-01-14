@@ -13,6 +13,7 @@ import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI';
 import {Link} from 'react-router-dom'
+import _ from 'lodash'
 
 class HomeController extends Component {
 
@@ -20,13 +21,11 @@ class HomeController extends Component {
         super(props);
 
         this.state = {
-            latestBlockNumber: 0,
-            latestBlock: [],
             latestTransactions: [],
             topHolders: [],
             emPrice: 0.001,
             totalVote: 0,
-            isLoading: true
+            isLoading: false
         };
     };
 
@@ -41,33 +40,27 @@ class HomeController extends Component {
             this.setState({ totalVote })
         })
 
-        let interval = setInterval(() => {
-            if (this.state.latestBlockNumber !== 0) {
-                this.setState({
-                    isLoading: false
-                })
-                clearInterval(interval)
-            }
-        },100)
+        // let interval = setInterval(() => {
+        //     if (this.state.latestBlockNumber !== 0) {
+        //         this.setState({
+        //             isLoading: false
+        //         })
+        //         clearInterval(interval)
+        //     }
+        // },100)
+    }
+
+    async componentDidUpdate (prevProps) {
+        if(_.isEqual(prevProps, this.props)) {
+            return;
+        }
     }
 
     renderLatestBlock() {
 
-        let { latestBlock, latestBlockNumber } = this.state
-        let { listProducer } = this.props
+        let { listProducer,latestBlock } = this.props
 
-        if (listProducer.length === 0) return;
-
-        if (this.props.block && this.props.block.number !== latestBlockNumber) {
-            latestBlock.unshift(this.props.block)
-            if (latestBlock.length > 7) {
-                latestBlock.pop()
-            }
-            this.setState({
-                latestBlockNumber: this.props.block.number,
-                latestBlock
-            })
-        }
+        if (listProducer.length === 0 || latestBlock.length === 0) return;
 
         return (
             <div className="table table-block">
@@ -328,7 +321,7 @@ class HomeController extends Component {
 }
 
 export default connect(state => ({
-    block: state.app.block,
+    latestBlock: state.app.latestBlock,
     listProducer: state.app.listProducer
 }), ({
 }))(HomeController)

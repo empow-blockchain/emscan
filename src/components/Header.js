@@ -4,7 +4,7 @@ import Select from 'react-select';
 import io from 'socket.io-client'
 import { SOCKET_ENDPOINT } from '../constants/index'
 import {
-    setNewBlock,
+    setLatestBlock,
     setAddressInfo,
     setListProducer
 } from '../reducers/appReducer'
@@ -21,6 +21,7 @@ import DropdownArrowIcon from '../assets/images/drop-down-arrow.png'
 import ServerAPI from '../ServerAPI';
 import Utils from '../utils';
 import {Link, Redirect} from 'react-router-dom'
+import {EMPO_URL} from '../constants/index'
 
 class Header extends Component {
     constructor(props) {
@@ -50,12 +51,18 @@ class Header extends Component {
             socket.emit("get_new_block", null)
         })
 
-        socket.on("res_new_block", (data) => {
-            this.props.setNewBlock(data)
-            this.setState({
-                blockNumber: data.number,
-                countTransaction: parseInt(this.state.countTransaction) + (data.tx_count - 1),
-                txCount: data.tx_count
+        ServerAPI.getBlocks(1,7).then(latestBlock => {
+            for(let i = latestBlock.length - 1; i >= 0; i--) {
+                this.props.setLatestBlock(latestBlock[i])
+            }
+
+            socket.on("res_new_block", (data) => {
+                this.props.setLatestBlock(data)
+                this.setState({
+                    blockNumber: data.number,
+                    countTransaction: parseInt(this.state.countTransaction) + (data.tx_count - 1),
+                    txCount: data.tx_count
+                })
             })
         })
 
@@ -169,7 +176,7 @@ class Header extends Component {
                         </div>
                         <div className="noti">
                             <img src={NotiIcon} alt="noti icon"></img>
-                            <div className="html" dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="https://empo.io" target="_blank">Empo - Social Network </a> on Empow Blockchain is ready to test` }}></div>
+                            <div className="html" dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="${EMPO_URL}" target="_blank">Empo - Social Network </a> on Empow Blockchain is ready to test` }}></div>
                         </div>
                     </div>
                 </div>
@@ -180,7 +187,7 @@ class Header extends Component {
 
 export default connect(state => ({
 }), ({
-    setNewBlock,
+    setLatestBlock,
     setAddressInfo,
     setListProducer
 }))(Header)

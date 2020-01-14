@@ -142,5 +142,11 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         }
     }
 
+    if(contract === "bonus.empow") {
+        if (action_name === "exchangeEMPOW") {
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Received</span> <b>{Utils.formatCurrency(data[1])} EM</b></p>
+        }
+    }
+
     return content
 }

@@ -43,13 +43,15 @@ class WalletProducer extends Component {
             isUpdateProducer: false,
             isWithdraw: false,
             voteRewardCanWithdraw: 0,
+            blockRewardCanWithdraw:0,
             showVoteRewardWithdraw: false,
             showBlockRewardWithdraw: false,
+            withdrawBlockRewardAmount: 0
         };
     };
 
     componentDidMount() {
-        this.getVoteReward()
+        this.init()
     }
 
     componentDidUpdate(prevProps) {
@@ -57,16 +59,23 @@ class WalletProducer extends Component {
             return;
         }
 
-        this.getVoteReward()
+        this.init()
     }
 
-    getVoteReward() {
+    init() {
         if (this.props.addressInfo && this.props.addressInfo.producer_info && this.props.listProducer.length > 0) {
             BlockchainAPI.getVoteRewardPerVote().then(voteRewardPerVote => {
                 BlockchainAPI.getVoteRewardWithdrawnByAddress(this.props.addressInfo.address).then(voteRewardWithdrawn => {
                     this.setState({
                         voteRewardCanWithdraw: voteRewardPerVote * this.props.addressInfo.producer_info.votes - voteRewardWithdrawn
                     })
+                })
+            })
+
+            ServerAPI.getBlockRewardWithdrawn(this.props.addressInfo.address).then(blockRewardWithdrawn => {
+                this.setState({
+                    blockRewardCanWithdraw: this.props.addressInfo.producer_info.block_reward - blockRewardWithdrawn,
+                    withdrawBlockRewardAmount: this.props.addressInfo.producer_info.block_reward - blockRewardWithdrawn
                 })
             })
         }
@@ -204,6 +213,38 @@ class WalletProducer extends Component {
                 )
             })
             this.setState({ isWithdraw: false, showVoteRewardWithdraw: false, voteRewardCanWithdraw: 0 })
+
+            // updateAddressInfo
+            ServerAPI.getAddress(addressInfo.address).then(info => this.props.setAddressInfo(info))
+        })
+    }
+
+    withdrawBlockReward() {
+        this.setState({ isWithdraw: true })
+
+        const { withdrawBlockRewardAmount} = this.state
+        const { addressInfo  } = this.props
+
+        const tx = window.empow.callABI("bonus.empow", "exchangeEMPOW", [addressInfo.address, withdrawBlockRewardAmount])
+        tx.addApprove("*", "unlimited")
+        const handler = window.empow.signAndSend(tx)
+
+        handler.on("failed", (error) => {
+            toastr.error('', Utils.getTransactionErrorMessage(error + ""))
+            this.setState({ isWithdraw: false })
+        })
+
+        handler.on("success", (res) => {
+            toastr.success('', "Withdraw Block Reward Success", {
+                component: (
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                )
+            })
+            this.setState({ isWithdraw: false, showBlockRewardWithdraw: false })
+            this.init()
+
+            // updateAddressInfo
+            ServerAPI.getAddress(addressInfo.address).then(info => this.props.setAddressInfo(info))
         })
     }
 
@@ -260,7 +301,7 @@ class WalletProducer extends Component {
 
     renderProducer() {
 
-        const { isEdit, avatar, name, pubkey, url, netId, loc, isUploading, isUpdateProducer, voteRewardCanWithdraw, showBlockRewardWithdraw, showVoteRewardWithdraw, isWithdraw } = this.state
+        const { isEdit, avatar, name, pubkey, url, netId, loc, isUploading, isUpdateProducer, voteRewardCanWithdraw, blockRewardCanWithdraw, showBlockRewardWithdraw, showVoteRewardWithdraw, isWithdraw, withdrawBlockRewardAmount } = this.state
         const { addressInfo, listProducer } = this.props
 
 
@@ -325,6 +366,7 @@ class WalletProducer extends Component {
                         className="loading-overlay"
                     >
                         <ConfirmOverlay onOk={() => this.withdrawVoteReward()} onCancel={() => this.setState({ showVoteRewardWithdraw: false })} title={<span>You will receive <b>{voteRewardCanWithdraw.toFixed(8)} EM</b></span>} isShow={showVoteRewardWithdraw}></ConfirmOverlay>
+                        <ConfirmOverlay moreComponent={<Input className="amount" title="WITHDRAW AMOUNT" type="text" value={withdrawBlockRewardAmount} onChange={(e) => this.setState({ withdrawBlockRewardAmount: e.target.value })} suffix="EM"></Input>} onOk={() => this.withdrawBlockReward()} onCancel={() => this.setState({ showBlockRewardWithdraw: false })} isShow={showBlockRewardWithdraw}></ConfirmOverlay>
                         <div className="statistic">
                             <div className="one-statistic">
                                 <p className="title">RANK</p>
@@ -346,7 +388,7 @@ class WalletProducer extends Component {
                         <div className="statistic" style={{ marginTop: 20, border: "none" }}>
                             <div className="one-statistic">
                                 <p className="title">BLOCK REWARD CAN WITHDRAW</p>
-                                <p className="number">{Utils.formatCurrency(0, 8)} EM <button className="btn btn-default">Withdraw</button></p>
+                                <p className="number">{Utils.formatCurrency(blockRewardCanWithdraw, 2)} EM <button onClick={() => this.setState({ showBlockRewardWithdraw: true })} className="btn btn-default">Withdraw</button></p>
                             </div>
                             <div className="one-statistic">
                                 <p className="title">VOTE REWARD CAN WITHDRAW</p>
