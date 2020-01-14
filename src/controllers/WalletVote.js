@@ -10,6 +10,8 @@ import _ from 'lodash'
 import FlagIcon from '../components/FlagIcon'
 import Select from 'react-select'
 import { setAddressInfo } from '../reducers/appReducer'
+import { Link } from 'react-router-dom'
+import ConfirmOverlay from '../components/ConfirmOverlay';
 
 class WalletVote extends Component {
 
@@ -21,7 +23,6 @@ class WalletVote extends Component {
             voteBalance: 0,
             isLoading: false,
             voted: 0,
-            listProducers: [],
             producerOptions: [],
             selectedProducer: { value: null, label: "Search or select producer to vote..." },
             unvoteAmount: 0,
@@ -38,45 +39,42 @@ class WalletVote extends Component {
             producer = this.props.match.params.producer
         }
 
-        ServerAPI.getListProducers().then(listProducers => {
+        const { listProducer } = this.props
+        let producerOptions = []
 
-            let producerOptions = []
+        for (let i = 0; i < listProducer.length; i++) {
 
-            for (let i = 0; i < listProducers.length; i++) {
-
-                if(producer && listProducers[i].address === producer) {
-                    this.setState({
-                        selectedProducer: {
-                            value: listProducers[i],
-                            label: <div className="producer-selected"><FlagIcon code={listProducers[i].loc.toLowerCase()}></FlagIcon> <p className="name">{listProducers[i].name ? listProducers[i].name : listProducers[i].pubkey}</p></div>
-                        }
-                    })
-                }
-
-                let avatar = listProducers[i].avatar ? listProducers[i].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
-                let name = listProducers[i].name ? listProducers[i].name : listProducers[i].pubkey
-                let option = {
-                    value: listProducers[i],
-                    label: <div className="producer-option">
-                        <div className="thumbnail">
-                            <img className="logo" alt="witness" src={avatar}></img>
-                        </div>
-                        <div className="info">
-                            <p className="name text-truncate">{name}</p>
-                            <div className="location">
-                                <FlagIcon code={listProducers[i].loc.toLowerCase()}></FlagIcon>
-                                <p>{Utils.countryCodeToContryName(listProducers[i].loc)}</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                producerOptions.push(option)
+            if (producer && listProducer[i].address === producer) {
+                this.setState({
+                    selectedProducer: {
+                        value: listProducer[i],
+                        label: <div className="producer-selected"><FlagIcon code={listProducer[i].loc.toLowerCase()}></FlagIcon> <p className="name">{listProducer[i].name ? listProducer[i].name : listProducer[i].pubkey}</p></div>
+                    }
+                })
             }
 
-            this.setState({ producerOptions, listProducers })
+            let avatar = listProducer[i].avatar ? listProducer[i].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+            let name = listProducer[i].name ? listProducer[i].name : listProducer[i].pubkey
+            let option = {
+                value: listProducer[i],
+                label: <div className="producer-option">
+                    <div className="thumbnail">
+                        <img className="logo" alt="witness" src={avatar}></img>
+                    </div>
+                    <div className="info">
+                        <p className="name text-truncate">{name}</p>
+                        <div className="location">
+                            <FlagIcon code={listProducer[i].loc.toLowerCase()}></FlagIcon>
+                            <p>{Utils.countryCodeToContryName(listProducer[i].loc)}</p>
+                        </div>
+                    </div>
+                </div>
+            }
 
-        })
+            producerOptions.push(option)
+        }
+
+        this.setState({ producerOptions })
     }
 
     componentDidUpdate(prevProps) {
@@ -146,7 +144,7 @@ class WalletVote extends Component {
                 )
             })
 
-            this.setState({showUnvote: false})
+            this.setState({ showUnvote: false })
 
             // reload address info
             ServerAPI.getAddress(this.props.addressInfo.address).then(addressInfo => this.props.setAddressInfo(addressInfo))
@@ -154,7 +152,7 @@ class WalletVote extends Component {
     }
 
     showUnvote(address, amount) {
-        this.setState({showUnvote: true, unvoteAmount: amount, unvoteAddress: address})
+        this.setState({ showUnvote: true, unvoteAmount: amount, unvoteAddress: address })
     }
 
     getVoted(vote_infos) {
@@ -168,13 +166,12 @@ class WalletVote extends Component {
         return amount
     }
 
-    getInfo(address) {
-        const { listProducers } = this.state
+    getProducerInfo(address) {
+        const { listProducer } = this.props
 
-        for (let i = 0; i < listProducers.length; i++) {
-            if (address === listProducers[i].address) {
-                listProducers[i].rank = i + 1
-                return listProducers[i]
+        for (let i = 0; i < listProducer.length; i++) {
+            if (address === listProducer[i].address) {
+                return listProducer[i]
             }
         }
     }
@@ -196,7 +193,7 @@ class WalletVote extends Component {
 
     render() {
 
-        const { amount, isLoading, voted, voteBalance, producerOptions, selectedProducer,unvoteAmount,showUnvote } = this.state
+        const { amount, isLoading, voted, voteBalance, producerOptions, selectedProducer, unvoteAmount, showUnvote } = this.state
         const { addressInfo } = this.props
 
         return (
@@ -240,15 +237,7 @@ class WalletVote extends Component {
                             </div>
                             {addressInfo && addressInfo.vote_infos.length > 0 &&
                                 <div className="table table-voted">
-                                    <div className={`unvote-overlay ${showUnvote ? "unvote-show" : ""}`}>
-                                        <div className="wrapper">
-                                            <Input className="unvote-amount" title="Unvote Amount" type="text" value={unvoteAmount} onChange={(e) => this.setState({ unvoteAmount: e.target.value })} suffix="VOTE"></Input>
-                                            <div className="action">
-                                                <span onClick={() => this.setState({showUnvote: false})}>Cancel</span>
-                                                <span onClick={() => this.unvote()}>OK</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ConfirmOverlay moreComponent={<Input className="unvote-amount" title="Unvote Amount" type="text" value={unvoteAmount} onChange={(e) => this.setState({ unvoteAmount: e.target.value })} suffix="VOTE"></Input>} isShow={showUnvote} onOk={() => this.unvote()} onCancel={() => this.setState({ showUnvote: false })}></ConfirmOverlay>
                                     <div className="table-header">
                                         <p className="title">PRODUCER VOTED</p>
                                     </div>
@@ -265,7 +254,10 @@ class WalletVote extends Component {
                                         {
                                             addressInfo.vote_infos.map((value, index) => {
 
-                                                const info = this.getInfo(value.option)
+                                                const info = this.getProducerInfo(value.option)
+
+                                                if (!info) return null
+
                                                 let avatar = info.avatar ? info.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
                                                 let name = info.name ? info.name : info.pubkey
 
@@ -281,8 +273,8 @@ class WalletVote extends Component {
                                                                         <img className="logo" alt="witness" src={avatar}></img>
                                                                     </div>
                                                                     <div className="address">
-                                                                        <a href={`/address/${info.address}`} className="text-truncate">{name}</a>
-                                                                        <a href={`/address/${info.address}`} className="text-truncate time">{info.address}</a>
+                                                                        <Link to={`/address/${info.address}`} className="text-truncate">{name}</Link>
+                                                                        <Link to={`/address/${info.address}`} className="text-truncate time">{info.address}</Link>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -313,7 +305,8 @@ class WalletVote extends Component {
 }
 
 export default connect(state => ({
-    addressInfo: state.app.addressInfo
+    addressInfo: state.app.addressInfo,
+    listProducer: state.app.listProducer
 }), ({
     setAddressInfo: setAddressInfo
 }))(WalletVote)

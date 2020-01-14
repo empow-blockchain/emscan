@@ -12,6 +12,7 @@ import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import ButtonCopy from '../components/ButtonCopy'
+import {Link} from 'react-router-dom'
 
 class TransactionDetail extends Component {
 
@@ -70,11 +71,11 @@ class TransactionDetail extends Component {
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Publisher</li>
-                                            <li><a href={`/address/${info.publisher}`}>{info.publisher}</a></li>
+                                            <li><Link to={`/address/${info.publisher}`}>{info.publisher}</Link></li>
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Block Number</li>
-                                            <li><a href={`/block/${info.blockNumber}`}>{info.blockNumber}</a></li>
+                                            <li><Link to={`/block/${info.blockNumber}`}>{info.blockNumber}</Link></li>
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Status</li>
@@ -131,6 +132,7 @@ class TransactionDetail extends Component {
                                         }
                                         {info.tx_receipt.receipts.length > 1 && <p href="#" className="hide-recepeit"><img src={upArrowIcon} alt="upArrowIcon"/>Hide Receipts</p>}
                                         {info.tx_receipt.receipts.length > 1 && info.tx_receipt.receipts.map((value, index) => {
+                                            console.log(value)
                                             const arr = value.func_name.split("/")
                                             return (
                                                 <ul key={index} className="list-inline one-receipt">

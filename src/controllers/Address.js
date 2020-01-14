@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import ReactJson from 'react-json-view'
 
 import LoadingIcon from '../assets/images/loading.gif'
@@ -15,6 +16,7 @@ import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI'
 import ButtonCopy from '../components/ButtonCopy'
+import {Link} from 'react-router-dom'
 
 class Address extends Component {
 
@@ -47,7 +49,7 @@ class Address extends Component {
                 this.setState({ info, isLoading: false })
 
                 this.loadGas()
-                if (info.producer_info) this.getProducerRank(info.address)
+                if (info.producer_info) this.getProducerInfo(info.address)
                 if (info.frozen_balances.length > 0) {
                     setInterval(() => this.countDownFrozenBalance(), 1000)
                 }
@@ -79,20 +81,20 @@ class Address extends Component {
         }, 1000)
     }
 
-    getProducerRank(address) {
-        ServerAPI.getListProducers().then(listProducer => {
-            for (let i = 0; i < listProducer.length; i++) {
-                if (listProducer[i].address === address) {
-                    this.setState({
-                        producerRank: i + 1,
-                        producerVote: listProducer[i].votes,
-                        producerBlock: listProducer[i].block_produced,
-                        producerReward: listProducer[i].block_reward,
-                    })
-                    return;
-                }
+    getProducerInfo(address) {
+        const {listProducer} = this.props
+
+        for (let i = 0; i < listProducer.length; i++) {
+            if (listProducer[i].address === address) {
+                this.setState({
+                    producerRank: listProducer[i].rank,
+                    producerVote: listProducer[i].votes,
+                    producerBlock: listProducer[i].block_produced,
+                    producerReward: listProducer[i].block_reward,
+                })
+                return;
             }
-        })
+        }
     }
 
     countDownFrozenBalance() {
@@ -194,7 +196,7 @@ class Address extends Component {
                                 <div className="row">
                                     <div className="col-md-7">
                                         <div className="avatar">
-                                            <img alt="avatar" src="https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"></img>
+                                            <img className="avatar-img" alt="avatar" src="https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"></img>
                                         </div>
                                         <div className="info">
                                             <ul className="list-inline">
@@ -312,7 +314,7 @@ class Address extends Component {
                                                 <li>{info.gas_info.increase_speed} GAS/s</li>
                                             </ul>
 
-                                            <p className="link-to-wallet"><a href="/wallet/gas">Pledge Gas</a> or <a href="/wallet/gas">Unpledge Gas</a></p>
+                                            <p className="link-to-wallet"><Link to="/wallet/gas">Pledge Gas</Link> or <Link to="/wallet/gas">Unpledge Gas</Link></p>
                                         </div>
                                         <div className="line"></div>
                                         <div className="one-resource">
@@ -334,7 +336,7 @@ class Address extends Component {
                                                 <li>Sell Price</li>
                                                 <li>{ramInfo ? ramInfo.sell_price.toFixed(8) : "---"} EM/Bytes</li>
                                             </ul>
-                                            <p className="link-to-wallet"><a href="/wallet/ram">Buy Ram</a> or <a href="/wallet/ram">Sell Ram</a></p>
+                                            <p className="link-to-wallet"><Link to="/wallet/ram">Buy Ram</Link> or <Link to="/wallet/ram">Sell Ram</Link></p>
                                         </div>
                                     </div>
                                 </div>
@@ -363,7 +365,7 @@ class Address extends Component {
                                                     <li key={index} className="table-row one-transaction">
                                                         <ul className="list-inline">
                                                             <li>
-                                                                <a className="text-truncate" style={{ width: "90%" }} href={`/tx/${value.hash}`}>{value.hash}</a>
+                                                                <Link className="text-truncate" style={{ width: "90%" }} to={`/tx/${value.hash}`}>{value.hash}</Link>
                                                             </li>
                                                             <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
                                                             <li><ActionTag {...value.actions[0]} fromPage="address" address={info.address}></ActionTag></li>
@@ -392,4 +394,8 @@ class Address extends Component {
     }
 }
 
-export default Address
+export default connect(state => ({
+    listProducer : state.app.listProducer
+}),({
+
+}))(Address)

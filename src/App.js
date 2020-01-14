@@ -91,16 +91,16 @@ class App extends React.Component {
     render() {
         return (
             <Fragment>
-                <Header />
                 <Router>
+                    <Header />
                     {routes.map((route, index) => {
                         return <Route key={index}
                             path={route.path}
                             exact={route.exact}
                             component={route.main} />
                     })}
+                    <Footer />
                 </Router>
-                <Footer />
             </Fragment>
         )
     }

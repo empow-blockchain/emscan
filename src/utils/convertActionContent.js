@@ -2,13 +2,13 @@ import React, { Fragment } from 'react';
 import { EMPO_URL } from '../constants/index'
 import Utils from '../utils/index'
 import FlagIcon from '../components/FlagIcon'
+import {Link} from 'react-router-dom'
 
 export default function (contract, action_name, data, tx_receipt, fromPage = "home", address = "") {
 
     let content = ""
 
     if(tx_receipt.status_code !== "SUCCESS") {
-        console.log(tx_receipt.message);
         return <p className="error-message"><span className="title">{tx_receipt.status_code}</span> {Utils.getTransactionErrorMessage(tx_receipt.message)}</p>
     }
 
@@ -35,6 +35,14 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
 
         if (action_name === "post") {
             content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">New Post</span> <a href={`${EMPO_URL}/post-detail/${tx_receipt.receipts[0].content[0]}`} target="_blank" rel="noopener noreferrer">{tx_receipt.receipts[0].content[0]}</a></p>
+        }
+
+        if(action_name === "blockContent") {
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Blocked</span> {data[1]}</p>
+        }
+
+        if(action_name === "unblockContent") {
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Blocked</span> {data[1]}</p>
         }
 
         if(action_name === "updateProfile") {
@@ -110,9 +118,14 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
             content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Success</span></p>
         }
 
+        if (action_name === "candidateWithdraw") {
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Received</span> <b>{tx_receipt.receipts.length > 0 ? `${Utils.formatCurrency(tx_receipt.receipts[0].content[3],2)} EM` : `0 EM`}</b></p>
+        }
+
         if (action_name === "approveRegister") {
             content = <p><span className="grey">Accept Producer</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></p>
         }
+        
     }
 
     if (contract === "stake.empow") {
@@ -121,11 +134,11 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         }
 
         if (action_name === "unstake") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Unstaked ID {data[1]}</span> <a href={`/wallet/stake`} target="_blank" rel="noopener noreferrer">View Stake ></a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Unstaked ID {data[1]}</span> <Link to={`/wallet/stake`} target="_blank" rel="noopener noreferrer">View Stake ></Link></p>
         }
 
         if(action_name === "withdraw") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Withdraw ID {data[1]}</span> <a href={`/wallet/stake`} target="_blank" rel="noopener noreferrer">View Stake ></a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Withdraw ID {data[1]}</span> <Link to={`/wallet/stake`} target="_blank" rel="noopener noreferrer">View Stake ></Link></p>
         }
     }
 

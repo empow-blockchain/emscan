@@ -12,6 +12,7 @@ import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI';
+import {Link} from 'react-router-dom'
 
 class HomeController extends Component {
 
@@ -21,7 +22,6 @@ class HomeController extends Component {
         this.state = {
             latestBlockNumber: 0,
             latestBlock: [],
-            listProducers: [],
             latestTransactions: [],
             topHolders: [],
             emPrice: 0.001,
@@ -31,9 +31,6 @@ class HomeController extends Component {
     };
 
     async componentDidMount() {
-        ServerAPI.getListProducers().then(listProducers => {
-            this.setState({ listProducers })
-        })
         ServerAPI.getTransactions().then(latestTransactions => {
             this.setState({ latestTransactions })
         })
@@ -56,9 +53,10 @@ class HomeController extends Component {
 
     renderLatestBlock() {
 
-        let { latestBlock, latestBlockNumber, listProducers } = this.state
+        let { latestBlock, latestBlockNumber } = this.state
+        let { listProducer } = this.props
 
-        if (listProducers.length === 0) return;
+        if (listProducer.length === 0) return;
 
         if (this.props.block && this.props.block.number !== latestBlockNumber) {
             latestBlock.unshift(this.props.block)
@@ -78,7 +76,7 @@ class HomeController extends Component {
                 </div>
                 <ul className="list-inline table-body">
                     {latestBlock.map((value, index) => {
-                        let producer = listProducers.filter(producer => { return producer.pubkey === value.witness })
+                        let producer = listProducer.filter(producer => { return producer.pubkey === value.witness })
                         let countryCode = producer[0].loc ? producer[0].loc.toLowerCase() : "us"
                         let avatar = producer[0].avatar ? producer[0].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
                         let name = producer[0].name ? producer[0].name : producer[0].pubkey
@@ -86,7 +84,7 @@ class HomeController extends Component {
                         return (
                             <li key={index} className="table-row one-block">
                                 <div className="block-number">
-                                    <a className="number" href={`/block/${value.number}`}>{value.number}</a>
+                                    <Link className="number" to={`/block/${value.number}`}>{value.number}</Link>
                                     <p className="time">{moment(value.time / 10 ** 6).fromNow()}</p>
                                 </div>
                                 <div className="witness">
@@ -95,8 +93,8 @@ class HomeController extends Component {
                                         <FlagIcon className="flag" code={countryCode}></FlagIcon>
                                     </div>
                                     <div className="name">
-                                        <p className="producer text-truncate">Witness <a href={`/address/${producer[0].address}`}>{name}</a></p>
-                                        <a href={`/block/${value.number}`} className="txns">{value.tx_count} txns</a>
+                                        <p className="producer text-truncate">Witness <Link to={`/address/${producer[0].address}`}>{name}</Link></p>
+                                        <Link to={`/block/${value.number}`} className="txns">{value.tx_count} txns</Link>
                                     </div>
                                 </div>
                             </li>
@@ -105,7 +103,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/blocks">View More</a>
+                        <Link to="/blocks">View More</Link>
                     </div>
                 </div>
             </div>
@@ -141,7 +139,7 @@ class HomeController extends Component {
                                     <ActionTag {...value.actions[0]} fromPage="home"></ActionTag>
 
                                     <div className="info">
-                                        <a className="text-truncate" href={`/tx/${value.hash}`}>{value.hash}</a>
+                                        <Link className="text-truncate" to={`/tx/${value.hash}`}>{value.hash}</Link>
                                         <p className="time">{moment(value.time / 10 ** 6).fromNow()}</p>
                                     </div>
                                 </li>
@@ -151,7 +149,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/txs">View More</a>
+                        <Link to="/txs">View More</Link>
                     </div>
                 </div>
             </div>
@@ -160,7 +158,8 @@ class HomeController extends Component {
 
     renderTopHolder() {
 
-        const { topHolders, listProducers, emPrice } = this.state
+        const { topHolders, emPrice } = this.state
+        const {listProducer} = this.props
 
         return (
             <div className="table table-holder">
@@ -173,14 +172,14 @@ class HomeController extends Component {
 
                             // disable admin address
                             if (value.address === "EM2ZsE41ZSeukSxhMyLsb3dZWP7fgFt43L7e5b9hXVBGPU7U4") return false;
-                            let isProducer = listProducers.filter(producer => { return producer.address === value.address }).length > 0 ? true : false
+                            let isProducer = listProducer.filter(producer => { return producer.address === value.address }).length > 0 ? true : false
 
                             return (
                                 <li key={index} className="table-row one-holder">
                                     <div className="info">
                                         <span className="top-number">{index}</span>
                                         <div className="address">
-                                            <a className="text-truncate" href={`/address/${value.address}`}>{value.address}</a>
+                                            <Link className="text-truncate" to={`/address/${value.address}`}>{value.address}</Link>
                                             <p className="type time">{isProducer ? "Producer" : "Address"}</p>
                                         </div>
                                     </div>
@@ -195,7 +194,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/">View More</a>
+                        <Link to="/">View More</Link>
                     </div>
                 </div>
             </div>
@@ -204,7 +203,8 @@ class HomeController extends Component {
 
     renderProducer() {
 
-        const { listProducers, totalVote } = this.state
+        const { totalVote } = this.state
+        const {listProducer} = this.props
 
         return (
             <div className="table table-producer">
@@ -226,7 +226,7 @@ class HomeController extends Component {
                 <ul className="list-inline table-body">
 
                     {
-                        listProducers.map((value, index) => {
+                        listProducer.map((value, index) => {
 
                             let avatar = value.avatar ? value.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
                             let name = value.name ? value.name : value.pubkey
@@ -235,7 +235,7 @@ class HomeController extends Component {
                                 <li key={index} className="table-row one-producer">
                                     <ul className="list-inline">
                                         <li>
-                                            <div className="top-number">{index + 1}</div>
+                                            <div className="top-number">{value.rank}</div>
                                         </li>
                                         <li>
                                             <div className="name">
@@ -243,8 +243,8 @@ class HomeController extends Component {
                                                     <img className="logo" alt="witness" src={avatar}></img>
                                                 </div>
                                                 <div className="address">
-                                                    <a href={`/address/${value.address}`} className="text-truncate">{name}</a>
-                                                    <a href={`/address/${value.address}`} className="text-truncate time">{value.address}</a>
+                                                    <Link to={`/address/${value.address}`} className="text-truncate">{name}</Link>
+                                                    <Link to={`/address/${value.address}`} className="text-truncate time">{value.address}</Link>
                                                 </div>
                                             </div>
                                         </li>
@@ -279,7 +279,7 @@ class HomeController extends Component {
                                         </li>
                                         <li>
                                             <div className="btn-vote">
-                                                <a href={`/wallet/vote/${value.address}`} className="btn btn-default">Vote for Producer</a>
+                                                <Link to={`/wallet/vote/${value.address}`} className="btn btn-default">Vote for Producer</Link>
                                             </div>
                                         </li>
                                     </ul>
@@ -290,7 +290,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <a href="/producer">View More</a>
+                        <Link to="/producer">View More</Link>
                     </div>
                 </div>
             </div>
@@ -328,6 +328,7 @@ class HomeController extends Component {
 }
 
 export default connect(state => ({
-    block: state.app.block
+    block: state.app.block,
+    listProducer: state.app.listProducer
 }), ({
 }))(HomeController)

@@ -19,6 +19,14 @@ const BlockchainAPI = {
         return this.getContractStorage("vote_producer.empow", "candAllKey")
     },
 
+    getVoteRewardPerVote() {
+        return this.getContractStorage("vote_producer.empow", "candCoef")
+    },
+
+    getVoteRewardWithdrawnByAddress(address) {
+        return this.getContractStorage("vote_producer.empow", "candMask", address)
+    },
+
     getRamInfo () {
         return new Promise ( (resolve,reject) => {
             Axios.get(`${BLOCKCHAIN_ENDPOINT}/getRAMInfo`)

@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 
 import FlagIcon from '../components/FlagIcon'
 import Proccess from '../components/Proccess'
 import Pagination from '../components/Pagination'
 
-import ServerAPI from '../ServerAPI'
 import BlockchainAPI from '../BlockchainAPI'
 import Utils from '../utils/index'
+import {Link} from 'react-router-dom'
 
 class Producer extends Component {
 
@@ -14,7 +15,6 @@ class Producer extends Component {
         super(props);
 
         this.state = {
-            listProducers: [],
             totalVote: 0,
             page: 1,
             pageSize: 20,
@@ -23,10 +23,6 @@ class Producer extends Component {
     };
 
     async componentDidMount() {
-        ServerAPI.getListProducers().then(listProducers => {
-            this.setState({ listProducers })
-        })
-
         BlockchainAPI.getTotalVote().then(totalVote => {
             this.setState({ totalVote })
         })
@@ -34,7 +30,8 @@ class Producer extends Component {
 
     render() {
 
-        const { listProducers, totalVote, page, pageSize, count } = this.state
+        const { totalVote, page, pageSize, count } = this.state
+        const {listProducer} = this.props
 
         return (
             <section id="producer">
@@ -59,7 +56,7 @@ class Producer extends Component {
                         <ul className="list-inline table-body">
 
                             {
-                                listProducers.map((value, index) => {
+                                listProducer.map((value, index) => {
 
                                     let avatar = value.avatar ? value.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
                                     let name = value.name ? value.name : value.pubkey
@@ -68,7 +65,7 @@ class Producer extends Component {
                                         <li key={index} className="table-row one-producer">
                                             <ul className="list-inline">
                                                 <li>
-                                                    <div className="top-number">{index + 1}</div>
+                                                    <div className="top-number">{value.rank}</div>
                                                 </li>
                                                 <li>
                                                     <div className="name">
@@ -76,8 +73,8 @@ class Producer extends Component {
                                                             <img className="logo" alt="witness" src={avatar}></img>
                                                         </div>
                                                         <div className="address">
-                                                            <a href={`/address/${value.address}`} className="text-truncate">{name}</a>
-                                                            <a href={`/address/${value.address}`} className="text-truncate time">{value.address}</a>
+                                                            <Link to={`/address/${value.address}`} className="text-truncate">{name}</Link>
+                                                            <Link to={`/address/${value.address}`} className="text-truncate time">{value.address}</Link>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -112,7 +109,7 @@ class Producer extends Component {
                                                 </li>
                                                 <li>
                                                     <div className="btn-vote">
-                                                        <a href={`/wallet/vote/${value.address}`} className="btn btn-default">Vote for Producer</a>
+                                                        <Link to={`/wallet/vote/${value.address}`} className="btn btn-default">Vote for Producer</Link>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -131,4 +128,8 @@ class Producer extends Component {
     }
 }
 
-export default Producer
+export default connect(state => ({
+    listProducer: state.app.listProducer
+}), ({
+
+}))(Producer)

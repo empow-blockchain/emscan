@@ -6,6 +6,7 @@ import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
+import {Link} from 'react-router-dom'
 
 class Txs extends Component {
 
@@ -82,7 +83,7 @@ class Txs extends Component {
                                                             <a className="text-truncate" target="_blank" rel="noopener noreferrer" href={`/tx/${value.hash}`}>{value.hash}</a>
                                                         </li>
                                                         <li>
-                                                            <a href={`/block/${value.blockNumber}`}>{value.blockNumber}</a>
+                                                            <Link to={`/block/${value.blockNumber}`}>{value.blockNumber}</Link>
                                                         </li>
                                                         <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
                                                         <li>

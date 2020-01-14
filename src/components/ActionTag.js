@@ -101,6 +101,12 @@ const ActionTag = props => {
             case "share":
                 content = "Share Post"
                 break
+            case "blockContent":
+                content = "Block Content"
+                break
+            case "unblockContent":
+                content = "Unblock Content"
+                break
             case "addPremiumUsername":
                 content = "Buy Premium Username"
                 break
@@ -148,6 +154,9 @@ const ActionTag = props => {
                 break
             case "unvote":
                 content = "Unvote"
+                break
+            case "candidateWithdraw":
+                content = "Withdraw Vote Reward"
                 break
             default:
                 break

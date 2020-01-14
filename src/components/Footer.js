@@ -4,6 +4,7 @@ import IconTelegram from '../assets/images/icon-telegram.png'
 import IconTwitter from '../assets/images/icon-twitter.png'
 import IconFacebook from '../assets/images/icon-facebook.png'
 import FooterPattern from '../assets/images/footer-pattern.png'
+import {Link} from 'react-router-dom'
 
 class Footer extends Component {
     render() {
@@ -32,11 +33,11 @@ class Footer extends Component {
                             <div className="footer-links">
                                 <p className="title">Links</p>
                                 <ul className="list-inline">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/blocks">Block</a></li>
-                                    <li><a href="/producer">Producer</a></li>
-                                    <li><a href="/wallet/stake">Stake</a></li>
-                                    <li><a href="/txs">Txs</a></li>
+                                    <li><Link to="/">Home</Link></li>
+                                    <li><Link to="/blocks">Block</Link></li>
+                                    <li><Link to="/producer">Producer</Link></li>
+                                    <li><Link to="/wallet/stake">Stake</Link></li>
+                                    <li><Link to="/txs">Txs</Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -44,12 +45,12 @@ class Footer extends Component {
                             <div className="footer-links">
                                 <p className="title">Wallet</p>
                                 <ul className="list-inline">
-                                    <li><a href="/wallet/transfer">Transfer</a></li>
-                                    <li><a href="/wallet/stake">Stake</a></li>
-                                    <li><a href="/wallet/gas">Gas</a></li>
-                                    <li><a href="/wallet/ram">Ram</a></li>
-                                    <li><a href="/wallet/producer">Producer</a></li>
-                                    <li><a href="/wallet/vote">Vote</a></li>
+                                    <li><Link to="/wallet/transfer">Transfer</Link></li>
+                                    <li><Link to="/wallet/stake">Stake</Link></li>
+                                    <li><Link to="/wallet/gas">Gas</Link></li>
+                                    <li><Link to="/wallet/ram">Ram</Link></li>
+                                    <li><Link to="/wallet/producer">Producer</Link></li>
+                                    <li><Link to="/wallet/vote">Vote</Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -58,7 +59,7 @@ class Footer extends Component {
                                 <p className="title">Support</p>
                                 <ul className="list-inline">
                                     <li>admin@empow.io</li>
-                                    <li><a href="/">Contact us</a></li>
+                                    <li><Link to="/">Contact us</Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -66,8 +67,8 @@ class Footer extends Component {
                             <div className="footer-links">
                                 <p className="title">About Us</p>
                                 <ul className="list-inline">
-                                    <li><a href="/">Join us</a></li>
-                                    <li><a href="/">Blog</a></li>
+                                    <li><Link to="/">Join us</Link></li>
+                                    <li><Link to="/">Blog</Link></li>
                                 </ul>
                             </div>
                         </div>

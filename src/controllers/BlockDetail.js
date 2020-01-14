@@ -11,6 +11,7 @@ import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
+import {Link} from 'react-router-dom'
 
 class BlockDetail extends Component {
 
@@ -74,7 +75,7 @@ class BlockDetail extends Component {
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Producer</li>
-                                            <li><a href={`/address/${witnessInfo.address}`}>{witnessInfo.name ? witnessInfo.name : witnessInfo.pubkey}</a></li>
+                                            <li><Link to={`/address/${witnessInfo.address}`}>{witnessInfo.name ? witnessInfo.name : witnessInfo.pubkey}</Link></li>
                                         </ul>
                                         <ul className="list-inline">
                                             <li>Location</li>

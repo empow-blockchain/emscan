@@ -5,7 +5,8 @@ import io from 'socket.io-client'
 import { SOCKET_ENDPOINT } from '../constants/index'
 import {
     setNewBlock,
-    setAddressInfo
+    setAddressInfo,
+    setListProducer
 } from '../reducers/appReducer'
 
 import DownloadIcon from '../assets/images/download-icon.png'
@@ -19,6 +20,7 @@ import PattenLogoRight from '../assets/images/patten-logo-right.png'
 import DropdownArrowIcon from '../assets/images/drop-down-arrow.png'
 import ServerAPI from '../ServerAPI';
 import Utils from '../utils';
+import {Link, Redirect} from 'react-router-dom'
 
 class Header extends Component {
     constructor(props) {
@@ -35,7 +37,8 @@ class Header extends Component {
             txCount: 0,
             EMTokenInfo: null,
             addressInfo: null,
-            searchValue: ""
+            searchValue: "",
+            redirectComponent: false,
         }
     };
 
@@ -64,6 +67,13 @@ class Header extends Component {
             this.setState({ EMTokenInfo })
         })
 
+        ServerAPI.getListProducers().then(listProducer => {
+            for(let i = 0; i < listProducer.length; i++) {
+                listProducer[i].rank = i + 1
+            }
+            this.props.setListProducer(listProducer)
+        })
+
         if (window.empow) {
             const address = await window.empow.enable()
 
@@ -88,21 +98,26 @@ class Header extends Component {
     onSearch(e) {
         this.setState({searchValue: e.target.value})
 
-        if(e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
-            window.location = "/address/" + e.target.value
+       if(e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
+            this.setState({
+                redirectComponent: <Redirect to={"/address/" + e.target.value} />
+            })
         }
 
         if(e.target.value.length === 44) {
-            window.location = "/tx/" + e.target.value
+            this.setState({
+                redirectComponent: <Redirect to={"/tx/" + e.target.value } />
+            })
         }
     }
 
     render() {
 
-        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo,searchValue } = this.state
+        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo,searchValue, redirectComponent } = this.state
 
         return (
             <header>
+                {redirectComponent && redirectComponent}
                 <div className="container">
                     <ul className="top-header">
                         <li>BLOCK NUMBER: {Utils.formatCurrency(blockNumber)}</li>
@@ -116,24 +131,24 @@ class Header extends Component {
                     <img className="patten-right" src={PattenRight} alt="patten right"></img>
                     <div className="container">
                         <ul className="list-inline">
-                            <li className="main-menu"><a href="/">Home</a></li>
-                            <li className="main-menu"><a href="/blocks">Block</a></li>
-                            <li className="main-menu"><a href="/producer">Producer</a></li>
-                            <li className="main-menu"><a href="/wallet/stake">Stake</a></li>
-                            <li className="main-menu"><a href="/txs">Txs</a></li>
+                            <li className="main-menu"><Link to="/">Home</Link></li>
+                            <li className="main-menu"><Link to="/blocks">Block</Link></li>
+                            <li className="main-menu"><Link to="/producer">Producer</Link></li>
+                            <li className="main-menu"><Link to="/wallet/stake">Stake</Link></li>
+                            <li className="main-menu"><Link to="/txs">Txs</Link></li>
                             {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
                             {addressInfo &&
                                 <li className="main-menu dropdown">
                                     <div className="line"></div>
                                     <img className="icon" src={DropdownArrowIcon} alt="drop down icon"></img>
-                                    <a href={`/address/${addressInfo.address}`} className="address text-truncate">{addressInfo.address} <span>{Utils.formatCurrency(addressInfo.balance, 2)} EM</span></a>
+                                    <Link to={`/address/${addressInfo.address}`} className="address text-truncate">{addressInfo.address} <span>{Utils.formatCurrency(addressInfo.balance, 2)} EM</span></Link>
                                     <ul className="dropdown-content">
-                                        <li><a href="/wallet/transfer">Transfer</a></li>
-                                        <li><a href="/wallet/stake">Stake</a></li>
-                                        <li><a href="/wallet/gas">Gas</a></li>
-                                        <li><a href="/wallet/ram">Ram</a></li>
-                                        <li><a href="/wallet/producer">Producer</a></li>
-                                        <li><a href="/wallet/vote">Vote</a></li>
+                                        <li><Link to="/wallet/transfer">Transfer</Link></li>
+                                        <li><Link to="/wallet/stake">Stake</Link></li>
+                                        <li><Link to="/wallet/gas">Gas</Link></li>
+                                        <li><Link to="/wallet/ram">Ram</Link></li>
+                                        <li><Link to="/wallet/producer">Producer</Link></li>
+                                        <li><Link to="/wallet/vote">Vote</Link></li>
                                     </ul>
                                 </li>
                             }
@@ -166,5 +181,6 @@ class Header extends Component {
 export default connect(state => ({
 }), ({
     setNewBlock,
-    setAddressInfo
+    setAddressInfo,
+    setListProducer
 }))(Header)

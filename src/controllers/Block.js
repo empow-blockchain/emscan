@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 
 import FlagIcon from '../components/FlagIcon'
 import Pagination from '../components/Pagination'
@@ -6,6 +7,7 @@ import Pagination from '../components/Pagination'
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
 import moment from 'moment'
+import {Link} from 'react-router-dom'
 
 class Block extends Component {
 
@@ -14,7 +16,6 @@ class Block extends Component {
 
         this.state = {
             blocks: [],
-            listProducers: [],
             page: 1,
             pageSize: 20,
             count: 0
@@ -26,19 +27,15 @@ class Block extends Component {
             this.setState({ count: blocks[0].number })
             this.setState({ blocks })
         })
-
-        ServerAPI.getListProducers().then(listProducers => {
-            this.setState({ listProducers })
-        })
     }
 
     getProducerInfo(pubkey) {
-        const { listProducers } = this.state
+        const { listProducer } = this.props
 
-        if (listProducers.length === 0) return null
+        if (listProducer.length === 0) return null
 
-        for (let i = 0; i < listProducers.length; i++) {
-            if (pubkey === listProducers[i].pubkey) return listProducers[i]
+        for (let i = 0; i < listProducer.length; i++) {
+            if (pubkey === listProducer[i].pubkey) return listProducer[i]
         }
     }
 
@@ -89,7 +86,7 @@ class Block extends Component {
                                         <li key={index} className="table-row one-block">
                                             <ul className="list-inline">
                                                 <li>
-                                                    <a href={`/block/${value.number}`}>{value.number}</a>
+                                                    <Link to={`/block/${value.number}`}>{value.number}</Link>
                                                 </li>
                                                 <li className="time" style={{ fontSize: 16 }}>{moment(value.time / 10 ** 6).fromNow()}</li>
                                                 <li>
@@ -98,8 +95,8 @@ class Block extends Component {
                                                             <img className="logo" alt="witness" src={avatar}></img>
                                                         </div>
                                                         <div className="address">
-                                                            <a href={`/address/${address}`} className="text-truncate">{name}</a>
-                                                            <a href={`/address/${address}`} className="text-truncate time">{address}</a>
+                                                            <Link to={`/address/${address}`} className="text-truncate">{name}</Link>
+                                                            <Link to={`/address/${address}`} className="text-truncate time">{address}</Link>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -135,4 +132,8 @@ class Block extends Component {
     }
 }
 
-export default Block
+export default connect(state => ({
+    listProducer: state.app.listProducer
+}), ({
+
+}))(Block)
