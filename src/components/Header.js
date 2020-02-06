@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import io from 'socket.io-client'
-import { SOCKET_ENDPOINT } from '../constants/index'
+import { SOCKET_ENDPOINT, DEFAULT_NETWORK } from '../constants/index'
 import {
     setLatestBlock,
     setAddressInfo,
@@ -28,7 +28,7 @@ class Header extends Component {
         super(props);
 
         this.state = {
-            networkSelectValue: { value: 'testnet', label: "TESTNET" },
+            networkSelectValue: { value: DEFAULT_NETWORK.toLowerCase(), label: DEFAULT_NETWORK },
             networkSelectOptions: [
                 { value: 'mainnet', label: 'MAINNET' },
                 { value: 'testnet', label: 'TESTNET' }
@@ -118,6 +118,16 @@ class Header extends Component {
         }
     }
 
+    changeNetwork(option) {
+        if(option.value === "testnet") {
+            window.location = "https://testnet.emscan.io"
+        }
+
+        if(option.value === "mainnet") {
+            window.location = "https://emscan.io"
+        }
+    }
+
     render() {
 
         const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo,searchValue, redirectComponent } = this.state
@@ -172,7 +182,7 @@ class Header extends Component {
                         <div className="wrapper-search">
                             <img src={SearchIcon} alt="search icon"></img>
                             <input onChange={(e) => this.onSearch(e)} value={searchValue} className="input-search" type="text" placeholder="Search address, tx hash, block number and token..." />
-                            <Select isSearchable={false} className="select-network" classNamePrefix="select-network" value={this.state.networkSelectValue} options={this.state.networkSelectOptions} onChange={(networkSelectValue) => this.setState({ networkSelectValue })}></Select>
+                            <Select isSearchable={false} className="select-network" classNamePrefix="select-network" value={this.state.networkSelectValue} options={this.state.networkSelectOptions} onChange={(networkSelectValue) => this.changeNetwork(networkSelectValue)}></Select>
                         </div>
                         <div className="noti">
                             <img src={NotiIcon} alt="noti icon"></img>
