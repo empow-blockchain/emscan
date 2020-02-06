@@ -14,6 +14,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI';
 import {Link} from 'react-router-dom'
 import _ from 'lodash'
+import { ADMIN_ADDRESS } from '../constants';
 
 class HomeController extends Component {
 
@@ -165,7 +166,7 @@ class HomeController extends Component {
                         topHolders.map((value, index) => {
 
                             // disable admin address
-                            if (value.address === "EM2ZsE41ZSeukSxhMyLsb3dZWP7fgFt43L7e5b9hXVBGPU7U4") return false;
+                            if (value.address === ADMIN_ADDRESS) return false;
                             let isProducer = listProducer.filter(producer => { return producer.address === value.address }).length > 0 ? true : false
 
                             return (
