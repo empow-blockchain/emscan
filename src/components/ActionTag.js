@@ -125,6 +125,12 @@ const ActionTag = props => {
             case "signUp":
                 content = "Active Address"
                 break
+            case "likeWithdraw":
+                content = "Post Withdraw"
+                break
+            case "delete":
+                content = "Delete Post"
+                break
             default:
                 break
         }

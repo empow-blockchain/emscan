@@ -196,7 +196,7 @@ class Address extends Component {
                                 <div className="row">
                                     <div className="col-md-7">
                                         <div className="avatar">
-                                            <img className="avatar-img" alt="avatar" src="https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"></img>
+                                            <img className="avatar-img" alt="avatar" src={info.producer_info.avatar ? info.producer_info.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"}></img>
                                         </div>
                                         <div className="info">
                                             <ul className="list-inline">

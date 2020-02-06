@@ -77,10 +77,10 @@ class Block extends Component {
 
                                     const producerInfo = this.getProducerInfo(value.witness)
 
-                                    let avatar = producerInfo && producerInfo.avatar ? producerInfo.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+                                    let avatar = producerInfo && producerInfo.avatar ? producerInfo.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
                                     let name = producerInfo && producerInfo.name ? producerInfo.name : value.witness
                                     let address = producerInfo && producerInfo.address ? producerInfo.address : value.witness
-                                    let loc = producerInfo && producerInfo.loc ? producerInfo.loc : "VN"
+                                    let loc = producerInfo && producerInfo.loc ? producerInfo.loc : "SG"
 
                                     return (
                                         <li key={index} className="table-row one-block">

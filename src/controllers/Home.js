@@ -70,8 +70,9 @@ class HomeController extends Component {
                 <ul className="list-inline table-body">
                     {latestBlock.map((value, index) => {
                         let producer = listProducer.filter(producer => { return producer.pubkey === value.witness })
+                        if(producer.length === 0) return null
                         let countryCode = producer[0].loc ? producer[0].loc.toLowerCase() : "us"
-                        let avatar = producer[0].avatar ? producer[0].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+                        let avatar = producer[0].avatar ? producer[0].avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
                         let name = producer[0].name ? producer[0].name : producer[0].pubkey
 
                         return (
@@ -221,7 +222,7 @@ class HomeController extends Component {
                     {
                         listProducer.map((value, index) => {
 
-                            let avatar = value.avatar ? value.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+                            let avatar = value.avatar ? value.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
                             let name = value.name ? value.name : value.pubkey
 
                             return (

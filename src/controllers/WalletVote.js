@@ -69,7 +69,7 @@ class WalletVote extends Component {
                 })
             }
 
-            let avatar = listProducer[i].avatar ? listProducer[i].avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+            let avatar = listProducer[i].avatar ? listProducer[i].avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
             let name = listProducer[i].name ? listProducer[i].name : listProducer[i].pubkey
             let option = {
                 value: listProducer[i],
@@ -270,7 +270,7 @@ class WalletVote extends Component {
 
                                                 if (!info) return null
 
-                                                let avatar = info.avatar ? info.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png"
+                                                let avatar = info.avatar ? info.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
                                                 let name = info.name ? info.name : info.pubkey
 
                                                 return (

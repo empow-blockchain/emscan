@@ -48,6 +48,14 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         if(action_name === "updateProfile") {
             content = <p><a className="address " href={`${EMPO_URL}/account/${data[0]}`}>View Profile ></a></p>
         }
+
+        if(action_name === "likeWithdraw") {
+            content = <p><span className="grey">Withdraw From Post</span> <a href={`${EMPO_URL}/post-detail/${data[0]}`} target="_blank" rel="noopener noreferrer">{data[0]}</a></p>
+        }
+
+        if(action_name === "delete") {
+            content = <p><span className="grey">Deleted {data[0]}</span></p>
+        }
     }
 
     if (contract === "auth.empow") {
@@ -103,7 +111,7 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         }
 
         if (action_name === "updateProducer") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Pubkey</span> {data[1]}<br /><span className="grey" style={{ marginLeft: 0 }}>Location</span> <FlagIcon code={data[2].toLowerCase()}></FlagIcon> {Utils.countryCodeToContryName(data[2])}<br /><span className="grey" style={{ marginLeft: 0 }}>URL</span> <a href={data[3]} target="_blank" rel="noopener noreferrer">{data[3]}</a><br /><span className="grey" style={{ marginLeft: 0 }}>Net ID</span> {data[4]}</p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Pubkey</span> {data[3]}<br /><span className="grey" style={{ marginLeft: 0 }}>Location</span> <FlagIcon code={data[4].toLowerCase()}></FlagIcon> {Utils.countryCodeToContryName(data[4])}<br /><span className="grey" style={{ marginLeft: 0 }}>URL</span> <a href={data[5]} target="_blank" rel="noopener noreferrer">{data[6]}</a><br /><span className="grey" style={{ marginLeft: 0 }}>Net ID</span> {data[4]}</p>
         }
 
         if (action_name === "vote") {

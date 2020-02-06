@@ -43,7 +43,7 @@ class WalletProducer extends Component {
             isUpdateProducer: false,
             isWithdraw: false,
             voteRewardCanWithdraw: 0,
-            blockRewardCanWithdraw:0,
+            blockRewardCanWithdraw: 0,
             showVoteRewardWithdraw: false,
             showBlockRewardWithdraw: false,
             withdrawBlockRewardAmount: 0
@@ -166,7 +166,7 @@ class WalletProducer extends Component {
 
         const { name, pubkey, loc, url, netId } = this.state
         const { addressInfo } = this.props
-        const avatar = this.state.avatar ? this.state.avatar : (addressInfo.producer_info.avatar ? addressInfo.producer_info.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png")
+        const avatar = this.state.avatar ? this.state.avatar : (addressInfo.producer_info.avatar ? addressInfo.producer_info.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH")
 
         const tx = window.empow.callABI("vote_producer.empow", "updateProducer", [addressInfo.address, avatar, name, pubkey, loc, url, netId])
         tx.addApprove("*", "unlimited")
@@ -222,8 +222,8 @@ class WalletProducer extends Component {
     withdrawBlockReward() {
         this.setState({ isWithdraw: true })
 
-        const { withdrawBlockRewardAmount} = this.state
-        const { addressInfo  } = this.props
+        const { withdrawBlockRewardAmount } = this.state
+        const { addressInfo } = this.props
 
         const tx = window.empow.callABI("bonus.empow", "exchangeEMPOW", [addressInfo.address, withdrawBlockRewardAmount])
         tx.addApprove("*", "unlimited")
@@ -241,6 +241,37 @@ class WalletProducer extends Component {
                 )
             })
             this.setState({ isWithdraw: false, showBlockRewardWithdraw: false })
+            this.init()
+
+            // updateAddressInfo
+            ServerAPI.getAddress(addressInfo.address).then(info => this.props.setAddressInfo(info))
+        })
+    }
+
+    toggleStatus () {
+        this.setState({ isWithdraw: true })
+
+        const { addressInfo } = this.props
+
+        let actionName = addressInfo.producer_info.online ? "logOutProducer" : "logInProducer"
+
+        const tx = window.empow.callABI("vote_producer.empow", actionName, [addressInfo.address])
+
+        tx.addApprove("*", "unlimited")
+        const handler = window.empow.signAndSend(tx)
+
+        handler.on("failed", (error) => {
+            toastr.error('', Utils.getTransactionErrorMessage(error + ""))
+            this.setState({ isWithdraw: false })
+        })
+
+        handler.on("success", (res) => {
+            toastr.success('', "Success", {
+                component: (
+                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                )
+            })
+            this.setState({ isWithdraw: false })
             this.init()
 
             // updateAddressInfo
@@ -304,7 +335,6 @@ class WalletProducer extends Component {
         const { isEdit, avatar, name, pubkey, url, netId, loc, isUploading, isUpdateProducer, voteRewardCanWithdraw, blockRewardCanWithdraw, showBlockRewardWithdraw, showVoteRewardWithdraw, isWithdraw, withdrawBlockRewardAmount } = this.state
         const { addressInfo, listProducer } = this.props
 
-
         const producer = listProducer.filter(producer => (producer.address === addressInfo.address))
         let rank = 0;
         if (producer.length > 0) rank = producer[0].rank
@@ -323,7 +353,7 @@ class WalletProducer extends Component {
                                 spinner
                                 className="loading-overlay"
                             />
-                            <img className="avatar-img" alt="avatar" src={avatar ? avatar : (addressInfo.producer_info.avatar ? addressInfo.producer_info.avatar : "https://eosx-apigw.eosx.io/logo-proxy/producer/https%3A%2F%2Fimg.bafang.com%2Fcdn%2Fassets%2Fimgs%2FMjAxOTg%2FC3B8310FFC1B46DA82C8ED7910C2AD61.png")}></img>
+                            <img className="avatar-img" alt="avatar" src={avatar ? avatar : (addressInfo.producer_info.avatar ? addressInfo.producer_info.avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH")}></img>
                             {isEdit && <p className="upload" onClick={this.uploadAvatar.bind(this)}><input onChange={this.onSelectFile.bind(this)} type="file" accept=".jpg,.png,.jpeg" ref="selectAvatar" style={{ display: "none" }}></input><img src={UploadIcon} alt="UploadIcon" />Upload Avatar</p>}
                         </div>
                         <div className="info">
@@ -369,9 +399,15 @@ class WalletProducer extends Component {
                         <ConfirmOverlay moreComponent={<Input className="amount" title="WITHDRAW AMOUNT" type="text" value={withdrawBlockRewardAmount} onChange={(e) => this.setState({ withdrawBlockRewardAmount: e.target.value })} suffix="EM"></Input>} onOk={() => this.withdrawBlockReward()} onCancel={() => this.setState({ showBlockRewardWithdraw: false })} isShow={showBlockRewardWithdraw}></ConfirmOverlay>
                         <div className="statistic">
                             <div className="one-statistic">
+                                <p className="title">STATUS</p>
+                                <p className={`number ${addressInfo.producer_info.online ? "status-success" : "status-error"}`}>{addressInfo.producer_info.online ? "ONLINE" : "OFFLINE"} <button onClick={() => this.toggleStatus()} className="btn btn-default">{addressInfo.producer_info.online ? "Logout" : "Login"}</button></p>
+                            </div>
+                            <div className="one-statistic">
                                 <p className="title">RANK</p>
                                 <p className="number">{Utils.formatCurrency(rank, 8)}</p>
                             </div>
+                        </div>
+                        <div className="statistic" style={{ marginTop: 20 }}>
                             <div className="one-statistic">
                                 <p className="title">VOTE</p>
                                 <p className="number">{Utils.formatCurrency(addressInfo.producer_info.votes, 8)}</p>
