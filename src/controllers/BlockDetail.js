@@ -48,8 +48,22 @@ class BlockDetail extends Component {
 
         const { info, isLoading } = this.state
 
-        if (info)
-            var witnessInfo = info.witness_info
+        let witnessInfo
+        
+        if(info) {
+
+            witnessInfo = {
+                address: info.witness,
+                name: info.witness,
+                loc: "SG"
+            }
+
+            if (info.witness_info)
+                witnessInfo = info.witness_info
+        }
+
+        
+
 
         return (
             <LoadingOverlay
