@@ -87,7 +87,7 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
 
     if (contract === "gas.empow") {
         if (action_name === "pledge") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}{data[0] !== data[1] && <Fragment><span className="grey">Pledge For</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[1]}`}>{data[1]}</a></Fragment>}<span className="grey">Amount EM</span> <b>-{Utils.formatCurrency(data[2], 8)} EM</b><span className="grey">Amount Gas</span> <b>+{Utils.formatCurrency(data[2] * 10000)} GAS</b></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}{data[0] !== data[1] && <Fragment><span className="grey">Pledge For</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[1]}`}>{data[1]}</a></Fragment>}<span className="grey">Amount EM</span> <b>-{Utils.formatCurrency(data[2], 8)} EM</b><span className="grey">Amount Gas</span> <b>+{Utils.formatCurrency(data[2] * 1000000)} GAS</b></p>
         }
 
         if (action_name === "unpledge") {

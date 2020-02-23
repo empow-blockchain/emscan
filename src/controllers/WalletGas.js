@@ -22,7 +22,7 @@ class WalletGas extends Component {
             ramInfo: null,
             buyAmount: 0,
             sellAmount: 0,
-            gasRatio: 100000
+            gasRatio: 1
         };
     };
 
@@ -183,7 +183,7 @@ class WalletGas extends Component {
                                             />
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="GAS"></Input>
+                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - buyAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
@@ -205,7 +205,7 @@ class WalletGas extends Component {
                                             />
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="GAS"></Input>
+                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + sellAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
