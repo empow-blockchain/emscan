@@ -131,6 +131,9 @@ const ActionTag = props => {
             case "delete":
                 content = "Delete Post"
                 break
+            case "validatePost":
+                content = "Validate Post"
+                break
             default:
                 break
         }

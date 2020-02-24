@@ -40,15 +40,6 @@ class HomeController extends Component {
         BlockchainAPI.getTotalVote().then(totalVote => {
             this.setState({ totalVote })
         })
-
-        // let interval = setInterval(() => {
-        //     if (this.state.latestBlockNumber !== 0) {
-        //         this.setState({
-        //             isLoading: false
-        //         })
-        //         clearInterval(interval)
-        //     }
-        // },100)
     }
 
     async componentDidUpdate (prevProps) {
@@ -108,11 +99,13 @@ class HomeController extends Component {
     renderLatestTransaction() {
 
         const { latestTransactions } = this.state
+        const { latestBlock } = this.props
+        const lastBlock = latestBlock[0]
 
-        if (this.props.block && this.props.block.tx_count > 1 && latestTransactions[0].hash !== this.props.block.transactions[this.props.block.tx_count - 1].hash) {
+        if (lastBlock && lastBlock.tx_count > 1 && latestTransactions[0].hash !== lastBlock.transactions[lastBlock.tx_count - 1].hash) {
 
-            for(let i = 1; i < this.props.block.transactions.length; i++) {
-                latestTransactions.unshift(this.props.block.transactions[i])
+            for(let i = 1; i < lastBlock.transactions.length; i++) {
+                latestTransactions.unshift(lastBlock.transactions[i])
                 latestTransactions.pop()
             }
 

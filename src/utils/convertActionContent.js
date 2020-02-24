@@ -14,15 +14,15 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
 
     if (contract === "social.empow") {
         if (action_name === "like") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Like post</span> <a href={`${EMPO_URL}/post-detail/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Like post</span> <a href={`${EMPO_URL}/post/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
         }
 
         if (action_name === "share") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Share post</span> <a href={`${EMPO_URL}/post-detail/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Share post</span> <a href={`${EMPO_URL}/post/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
         }
 
         if (action_name === "comment") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Comment</span> {data[4]}<span className="grey">in post</span> <a href={`${EMPO_URL}/post-detail/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Comment</span> {data[4]}<span className="grey">in post</span> <a href={`${EMPO_URL}/post/${data[1]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a></p>
         }
 
         if (action_name === "follow") {
@@ -34,7 +34,7 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         }
 
         if (action_name === "post") {
-            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">New Post</span> <a href={`${EMPO_URL}/post-detail/${tx_receipt.receipts[0].content[0]}`} target="_blank" rel="noopener noreferrer">{tx_receipt.receipts[0].content[0]}</a></p>
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">New Post</span> <a href={`${EMPO_URL}/post/${tx_receipt.receipts[0].content[0]}`} target="_blank" rel="noopener noreferrer">{tx_receipt.receipts[0].content[0]}</a></p>
         }
 
         if(action_name === "blockContent") {
@@ -50,11 +50,15 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
         }
 
         if(action_name === "likeWithdraw") {
-            content = <p><span className="grey">Withdraw From Post</span> <a href={`${EMPO_URL}/post-detail/${data[0]}`} target="_blank" rel="noopener noreferrer">{data[0]}</a></p>
+            content = <p><span className="grey">Withdraw From Post</span> <a href={`${EMPO_URL}/post/${data[0]}`} target="_blank" rel="noopener noreferrer">{data[0]}</a></p>
         }
 
         if(action_name === "delete") {
             content = <p><span className="grey">Deleted {data[0]}</span></p>
+        }
+
+        if(action_name === "validatePost") {
+            content = <p>{fromPage !== "address" && <Fragment><span className="grey">Address</span> <a className="address " target="_blank" rel="noopener noreferrer" href={`/address/${data[0]}`}>{data[0]}</a></Fragment>}<span className="grey">Validate post</span> <a href={`${EMPO_URL}/post/${data[0]}`} target="_blank" rel="noopener noreferrer">{data[1]}</a> is not <b>{data[2]}</b></p>
         }
     }
 
