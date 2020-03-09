@@ -13,7 +13,7 @@ const ActionTag = props => {
     let colorClass = "default"
     let content = contract + "::" + action_name
 
-    if (contract === "token.empow") {
+    if (contract === "token.empow" || contract === "base.empow") {
         colorClass = "transfer"
 
         switch (action_name) {
@@ -31,6 +31,9 @@ const ActionTag = props => {
                 break
             case "destroy":
                 content = "Burn Token"
+                break
+            case "exec":
+                content = "Base Execute"
                 break
             default:
                 break
@@ -131,8 +134,14 @@ const ActionTag = props => {
             case "delete":
                 content = "Delete Post"
                 break
-            case "validatePost":
-                content = "Validate Post"
+            case "verifyPost":
+                content = "Verify Post"
+                break
+            case "likeComment":
+                content = "Like Comment"
+                break
+            case "likeCommentWithdraw":
+                content = "Comment Withdraw"
                 break
             default:
                 break

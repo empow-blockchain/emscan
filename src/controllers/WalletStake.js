@@ -164,7 +164,7 @@ class WalletStake extends Component {
                 )
             })
             this.setState({ isLoading: false })
-            this.loadListStake(true)
+            this.getStakeInfo(true)
         })
     }
 
@@ -185,7 +185,7 @@ class WalletStake extends Component {
                     <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
                 )
             })
-            this.loadListStake(true)
+            this.getStakeInfo(true)
         })
     }
 
