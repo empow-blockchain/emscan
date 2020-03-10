@@ -173,7 +173,7 @@ class HomeController extends Component {
                                     </div>
                                     <div className="balance">
                                         <p className="balance-em">{Utils.formatCurrency(value.balance, 2)} EM</p>
-                                        <p className="balance-usd time">$ {Utils.formatCurrency(value.balance * emPrice, 8)}</p>
+                                        {/* <p className="balance-usd time">$ {Utils.formatCurrency(value.balance * emPrice, 8)}</p> */}
                                     </div>
                                 </li>
                             )
