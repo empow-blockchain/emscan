@@ -182,7 +182,7 @@ class HomeController extends Component {
                 </ul>
                 <div className="table-footer">
                     <div className="center view-more">
-                        <Link to="/">View More</Link>
+                        <Link to="/holders">View More</Link>
                     </div>
                 </div>
             </div>

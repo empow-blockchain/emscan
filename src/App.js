@@ -14,6 +14,7 @@ import WalletProducer from './controllers/WalletProducer';
 import WalletVote from './controllers/WalletVote';
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Holders from './controllers/Holders'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import 'bootstrap/scss/bootstrap.scss'
@@ -44,6 +45,11 @@ const routes = [
         path: '/txs',
         exact: false,
         main: () => <Txs />
+    },
+    {
+        path: '/holders',
+        exact: false,
+        main: () => <Holders />
     },
     {
         path: '/tx/:hash',

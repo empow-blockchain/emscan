@@ -30,9 +30,16 @@ const ServerAPI = {
             .catch(error => (reject(error.response.data)))
         })
     },
-    getTopHolders() {
+    getTopHolders(page = 1, pageSize = 8) {
         return new Promise ( (resolve,reject) => {
-            Axios.get(`${API_ENDPOINT}/getAddresses?page=1&pageSize=8&orderBy=balance&orderType=-1`)
+            Axios.get(`${API_ENDPOINT}/getAddresses?page=${page}&pageSize=${pageSize}&orderBy=balance&orderType=-1`)
+            .then(res => (resolve(res.data)))
+            .catch(error => (reject(error.response.data)))
+        })
+    },
+    getCountAddress() {
+        return new Promise ( (resolve,reject) => {
+            Axios.get(`${API_ENDPOINT}/getCountAddress`)
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
