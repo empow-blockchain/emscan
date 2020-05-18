@@ -29,7 +29,7 @@ class WalletGas extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.reloadAccountInfo()
-        },1000)
+        }, 1000)
     }
 
     componentDidUpdate(prevProps) {
@@ -39,9 +39,9 @@ class WalletGas extends Component {
     }
 
     reloadAccountInfo() {
-        if(this.props.addressInfo) {
+        if (this.props.addressInfo) {
 
-            let newObj = Object.assign({},this.props.addressInfo)
+            let newObj = Object.assign({}, this.props.addressInfo)
 
             BlockchainAPI.getAddress(this.props.addressInfo.address).then(info => {
                 newObj.balance = info.balance
@@ -54,7 +54,7 @@ class WalletGas extends Component {
     pledgeGas() {
         this.setState({ isBuyLoading: true })
 
-        const { buyAmount,gasRatio } = this.state
+        const { buyAmount, gasRatio } = this.state
 
         const tx = window.empow.callABI("gas.empow", "pledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(buyAmount / gasRatio).toFixed(2).toString()])
         tx.addApprove("*", "unlimited")
@@ -81,7 +81,7 @@ class WalletGas extends Component {
     unpledgeGas() {
         this.setState({ isSellLoading: true })
 
-        const { sellAmount,gasRatio } = this.state
+        const { sellAmount, gasRatio } = this.state
 
         const tx = window.empow.callABI("gas.empow", "unpledge", [this.props.addressInfo.address, this.props.addressInfo.address, parseFloat(sellAmount / gasRatio).toFixed(2).toString()])
         tx.addApprove("*", "unlimited")
@@ -106,7 +106,7 @@ class WalletGas extends Component {
     }
 
     getSelfPledged() {
-        const { addressInfo,  } = this.props
+        const { addressInfo, } = this.props
         if (!addressInfo || addressInfo.gas_info.pledged_info.length === 0) return 0;
 
         let amount = 0
@@ -135,7 +135,7 @@ class WalletGas extends Component {
 
     render() {
 
-        const { buyAmount, sellAmount, isBuyLoading, isSellLoading,gasRatio } = this.state
+        const { buyAmount, sellAmount, isBuyLoading, isSellLoading, gasRatio } = this.state
         const { addressInfo } = this.props
 
         return (
@@ -172,46 +172,48 @@ class WalletGas extends Component {
                                                 <p className="number">{Utils.formatCurrency(this.getPledgedOthers())} EM</p>
                                             </div>
                                         </div>
-                                        <div className="buy">
-                                            <p className="label">PLEDGE GAS</p>
-                                            <Slider
-                                                min={0}
-                                                max={addressInfo.balance * gasRatio}
-                                                step={1}
-                                                value={buyAmount}
-                                                onChange={(value) => this.setState({ buyAmount: value })}
-                                            />
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
+                                        <div className="waper-row">
+                                            <div className="buy">
+                                                <p className="label">PLEDGE GAS</p>
+                                                <Slider
+                                                    min={0}
+                                                    max={addressInfo.balance * gasRatio}
+                                                    step={1}
+                                                    value={buyAmount}
+                                                    onChange={(value) => this.setState({ buyAmount: value })}
+                                                />
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - buyAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
+                                                    </div>
                                                 </div>
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - buyAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
-                                                </div>
+                                                <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.pledgeGas()}>Pledge Gas</button>
                                             </div>
-                                            <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.pledgeGas()}>Pledge Gas</button>
-                                        </div>
-                                        <div className="line">
-                                            <span></span>
-                                        </div>
-                                        <div className="sell">
-                                            <p className="label">UNPLEDGE GAS</p>
-                                            <Slider
-                                                min={0}
-                                                max={this.getSelfPledged() * gasRatio}
-                                                step={1}
-                                                value={sellAmount}
-                                                onChange={(value) => this.setState({ sellAmount: value })}
-                                            />
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + sellAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
-                                                </div>
+                                            <div className="line">
+                                                <span></span>
                                             </div>
-                                            <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.unpledgeGas()}>Unpledge Gas</button>
+                                            <div className="sell">
+                                                <p className="label">UNPLEDGE GAS</p>
+                                                <Slider
+                                                    min={0}
+                                                    max={this.getSelfPledged() * gasRatio}
+                                                    step={1}
+                                                    value={sellAmount}
+                                                    onChange={(value) => this.setState({ sellAmount: value })}
+                                                />
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="EM"></Input>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + sellAmount / gasRatio).toFixed(8)} suffix="EM"></Input>
+                                                    </div>
+                                                </div>
+                                                <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.unpledgeGas()}>Unpledge Gas</button>
+                                            </div>
                                         </div>
                                     </Fragment>
                                 }

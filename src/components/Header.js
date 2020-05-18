@@ -20,9 +20,9 @@ import PattenLogoRight from '../assets/images/patten-logo-right.png'
 import DropdownArrowIcon from '../assets/images/drop-down-arrow.png'
 import ServerAPI from '../ServerAPI';
 import Utils from '../utils';
-import {Link, Redirect} from 'react-router-dom'
-import {EMPO_URL} from '../constants/index'
-
+import { Link, Redirect } from 'react-router-dom'
+import { EMPO_URL } from '../constants/index'
+import List from '../assets/images/list.svg';
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +40,7 @@ class Header extends Component {
             addressInfo: null,
             searchValue: "",
             redirectComponent: false,
+            showMenu: false
         }
     };
 
@@ -51,8 +52,8 @@ class Header extends Component {
             socket.emit("get_new_block", null)
         })
 
-        ServerAPI.getBlocks(1,7).then(latestBlock => {
-            for(let i = latestBlock.length - 1; i >= 0; i--) {
+        ServerAPI.getBlocks(1, 7).then(latestBlock => {
+            for (let i = latestBlock.length - 1; i >= 0; i--) {
                 this.props.setLatestBlock(latestBlock[i])
             }
 
@@ -75,7 +76,7 @@ class Header extends Component {
         })
 
         ServerAPI.getListProducers().then(listProducer => {
-            for(let i = 0; i < listProducer.length; i++) {
+            for (let i = 0; i < listProducer.length; i++) {
                 listProducer[i].rank = i + 1
             }
             this.props.setListProducer(listProducer)
@@ -92,8 +93,8 @@ class Header extends Component {
                 }
 
                 let result = await ServerAPI.getAddress(address)
-                if(result) addressInfo = result
-                
+                if (result) addressInfo = result
+
                 this.props.setAddressInfo(addressInfo)
                 this.setState({
                     addressInfo
@@ -103,34 +104,61 @@ class Header extends Component {
     }
 
     onSearch(e) {
-        this.setState({searchValue: e.target.value})
+        this.setState({ searchValue: e.target.value })
 
-       if(e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
+        if (e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
             this.setState({
                 redirectComponent: <Redirect to={"/address/" + e.target.value} />
             })
         }
 
-        if(e.target.value.length === 44) {
+        if (e.target.value.length === 44) {
             this.setState({
-                redirectComponent: <Redirect to={"/tx/" + e.target.value } />
+                redirectComponent: <Redirect to={"/tx/" + e.target.value} />
             })
         }
     }
 
     changeNetwork(option) {
-        if(option.value === "testnet") {
+        if (option.value === "testnet") {
             window.location = "https://testnet.emscan.io"
         }
 
-        if(option.value === "mainnet") {
+        if (option.value === "mainnet") {
             window.location = "https://emscan.io"
         }
     }
 
+    showMenu = () => {
+        this.setState({
+            showMenu: !this.state.showMenu
+        })
+    }
+
+    renderMenu() {
+        const { addressInfo } = this.state
+        return (
+            <ul className="list-inline-app">
+                {addressInfo && <li className="main-menu"><Link to={`/address/${addressInfo.address}`}>{addressInfo.address.substring(0,15) + '...'}</Link></li>}
+                {addressInfo && <li className="main-menu">{Utils.formatCurrency(addressInfo.balance, 2)} EM</li>}
+                <li className="main-menu"><Link to="/">Home</Link></li>
+                <li className="main-menu"><Link to="/blocks">Block</Link></li>
+                <li className="main-menu"><Link to="/producer">Producer</Link></li>
+                <li className="main-menu"><Link to="/wallet/stake">Stake</Link></li>
+                <li className="main-menu"><Link to="/txs">Txs</Link></li>
+                {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
+
+                {addressInfo && <li className="main-menu"><Link to="/wallet/gas">Gas</Link></li>}
+                {addressInfo && <li className="main-menu"><Link to="/wallet/ram">Ram</Link></li>}
+                {addressInfo && <li className="main-menu"><Link to="/wallet/producer">Producer</Link></li>}
+                {addressInfo && <li className="main-menu"><Link to="/wallet/vote">Vote</Link></li>}
+            </ul>
+        )
+    }
+
     render() {
 
-        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo,searchValue, redirectComponent } = this.state
+        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo, searchValue, redirectComponent } = this.state
 
         return (
             <header>
@@ -144,6 +172,8 @@ class Header extends Component {
                     </ul>
                 </div>
                 <div className="navbar">
+                    <img onClick={this.showMenu} className="list" src={List} alt="photos"></img>
+
                     <img className="patten-left" src={PattenLeft} alt="patten left"></img>
                     <img className="patten-right" src={PattenRight} alt="patten right"></img>
                     <div className="container">
@@ -176,6 +206,8 @@ class Header extends Component {
                             <img className="patten-logo-right" src={PattenLogoRight} alt="patten logo right"></img>
                         </div>
                     </div>
+
+                    {this.state.showMenu && this.renderMenu()}
                 </div>
                 <div className="search">
                     <div className="container">

@@ -1052,6 +1052,11 @@ header {
         max-height: 70px;
         padding: 0;
 
+        .list {
+            width: 30px;
+            display: none;
+        }
+
         .patten-left {
             position: absolute;
             left: 0px;
@@ -2269,5 +2274,129 @@ footer {
 @media (min-width: 1400px) {
     .container {
         max-width: 1270px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        .top-header {
+            li {
+                font-size: 12px;
+                width: 21%;
+            }
+        }
+
+        .navbar {
+            .list {
+                cursor: pointer;
+                display: block;
+                margin-left: 10px;
+                margin-top: 20px;
+                z-index: 5;
+            }
+
+            .list-inline {
+                display: none;
+            }
+            .logo {
+                margin-top: 17px;
+            }
+            .menu {
+                display: block;
+            }
+
+            .list-inline-app {
+                position: absolute;
+                top: 51px;
+                background-color: $linkColor;
+                width: 45%;
+                z-index: 5;
+                li.main-menu:nth-child(4) {
+                    margin: 0;
+                }
+                li.main-menu {
+                    display: block;
+                    padding-left: 10px;
+                    width: 100%;
+                    color: white;
+                    a {
+                        font-size: 14px;
+                        line-height: 30px;
+                    }
+                }
+            }
+        }
+    }
+
+    .table, #block .table-block {
+        overflow-x: auto;
+        .table-title, .table-body {
+            width: 1000px;
+        }
+    }
+
+    #home {
+        .col-md-4 {
+            margin-bottom: 20px;
+        }
+    }
+
+    #address {
+        .address-title {
+            font-size: 13px;
+        }
+        .btn-copy {
+            margin: 0;
+        }
+        .basic-info ul li.balance {
+            font-size: 15px;
+        }
+        .col-md-6 {
+            overflow-x: auto;
+            width: calc(100% - 30px);
+            padding: 0;
+            margin-left: 15px;
+            align-items: center;
+            .resource-info {
+                width: 1000px;
+            }
+            .one-resource {
+                width: 300px;
+            }
+        }
+    }
+
+    #wallet-stake, #wallet-ram, #wallet-producer {
+        .col-md-9 {
+            .card {
+                overflow-x: auto;
+                .statistic, .waper-row, .how-to {
+                    width: 1000px;
+                }
+            }
+        }
+    }
+
+    footer {
+        height: auto;
+        .social-links {
+            margin: 20px;
+        }
+        .col-md-2 {
+            width: 25%;
+            display: block;
+            .footer-links {
+                .title {
+                    font-size: 15px;
+                }
+
+                ul {
+                    li, a{
+                        font-size: 12px;
+                    }
+                }
+            } 
+           
+        }
     }
 }

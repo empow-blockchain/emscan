@@ -135,46 +135,48 @@ class WalletRam extends Component {
                                                 <p className="number">{Utils.formatCurrency(ramInfo.sell_price, 8)} EM/Bytes</p>
                                             </div>
                                         </div>
-                                        <div className="buy">
-                                            <p className="label">BUY RAM</p>
-                                            <Slider
-                                                min={0}
-                                                max={maxBuy}
-                                                step={1}
-                                                value={buyAmount}
-                                                onChange={(value) => this.setState({ buyAmount: value })}
-                                            />
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
+                                        <div className="waper-row">
+                                            <div className="buy">
+                                                <p className="label">BUY RAM</p>
+                                                <Slider
+                                                    min={0}
+                                                    max={maxBuy}
+                                                    step={1}
+                                                    value={buyAmount}
+                                                    onChange={(value) => this.setState({ buyAmount: value })}
+                                                />
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-bytes" type="text" value={buyAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - (buyAmount * ramInfo.buy_price)).toFixed(8)} suffix="EM"></Input>
+                                                    </div>
                                                 </div>
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance - (buyAmount * ramInfo.buy_price)).toFixed(8)} suffix="EM"></Input>
-                                                </div>
+                                                <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.buyRam()}>Buy Ram</button>
                                             </div>
-                                            <button className={`btn btn-color ${isBuyLoading ? "btn-color-loading" : ""}`} onClick={() => this.buyRam()}>Buy Ram</button>
-                                        </div>
-                                        <div className="line">
-                                            <span></span>
-                                        </div>
-                                        <div className="sell">
-                                            <p className="label">SELL RAM</p>
-                                            <Slider
-                                                min={0}
-                                                max={maxSell}
-                                                step={1}
-                                                value={sellAmount}
-                                                onChange={(value) => this.setState({ sellAmount: value })}
-                                            />
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + (sellAmount * ramInfo.sell_price)).toFixed(8)} suffix="EM"></Input>
-                                                </div>
+                                            <div className="line">
+                                                <span></span>
                                             </div>
-                                            <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.sellRam()}>Sell Ram</button>
+                                            <div className="sell">
+                                                <p className="label">SELL RAM</p>
+                                                <Slider
+                                                    min={0}
+                                                    max={maxSell}
+                                                    step={1}
+                                                    value={sellAmount}
+                                                    onChange={(value) => this.setState({ sellAmount: value })}
+                                                />
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-bytes" type="text" value={sellAmount} onChange={(e) => this.setState({ buyAmount: e.target.value })} suffix="Bytes"></Input>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <Input className="buy-amount-em" disabled={true} type="text" value={parseFloat(addressInfo.balance + (sellAmount * ramInfo.sell_price)).toFixed(8)} suffix="EM"></Input>
+                                                    </div>
+                                                </div>
+                                                <button className={`btn btn-color ${isSellLoading ? "btn-color-loading" : ""}`} onClick={() => this.sellRam()}>Sell Ram</button>
+                                            </div>
                                         </div>
                                     </Fragment>
                                 }
