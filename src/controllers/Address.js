@@ -252,7 +252,7 @@ class Address extends Component {
                                     <div className="card basic-info">
                                         <ul className="list-inline">
                                             <li>Balance</li>
-                                            <li className="balance">{Utils.formatCurrency(info.balance, 8)} EM</li>
+                                            <li className="balance">{Utils.formatCurrency(info.balance, 2)} EM</li>
                                         </ul>
                                         <ul className="list-inline">
                                             <li>On Stake</li>
