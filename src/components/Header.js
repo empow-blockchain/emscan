@@ -117,6 +117,15 @@ class Header extends Component {
                 redirectComponent: <Redirect to={"/tx/" + e.target.value} />
             })
         }
+
+        ServerAPI.getAddressByUsername(e.target.value).then(accountInfo => {
+            if (accountInfo && accountInfo.address) {
+                this.setState({
+                    redirectComponent: <Redirect to={"/address/" + accountInfo.address} />
+                })
+            }
+        }).catch(err => {
+        })
     }
 
     changeNetwork(option) {
@@ -139,7 +148,7 @@ class Header extends Component {
         const { addressInfo } = this.state
         return (
             <ul className="list-inline-app">
-                {addressInfo && <li className="main-menu"><Link to={`/address/${addressInfo.address}`}>{addressInfo.address.substring(0,15) + '...'}</Link></li>}
+                {addressInfo && <li className="main-menu"><Link to={`/address/${addressInfo.address}`}>{addressInfo.address.substring(0, 15) + '...'}</Link></li>}
                 {addressInfo && <li className="main-menu">{Utils.formatCurrency(addressInfo.balance, 2)} EM</li>}
                 <li className="main-menu"><Link to="/">Home</Link></li>
                 <li className="main-menu"><Link to="/blocks">Block</Link></li>
