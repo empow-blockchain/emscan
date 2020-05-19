@@ -146,7 +146,7 @@ class HomeController extends Component {
 
     renderTopHolder() {
 
-        const { topHolders, emPrice } = this.state
+        const { topHolders } = this.state
         const {listProducer} = this.props
 
         return (

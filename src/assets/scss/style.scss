@@ -2279,10 +2279,17 @@ footer {
 
 @media screen and (max-width: 768px) {
     header {
+        .wrapper {
+            overflow-x: auto;
+        }
         .top-header {
+            width: 800px;
+            list-style: none;
+            justify-content: space-between;
+            display: flex;
+            min-height: 50px;
             li {
-                font-size: 12px;
-                width: 21%;
+                text-align: center;
             }
         }
 
@@ -2307,7 +2314,7 @@ footer {
 
             .list-inline-app {
                 position: absolute;
-                top: 51px;
+                top: 70px;
                 background-color: $linkColor;
                 width: 45%;
                 z-index: 5;
@@ -2323,15 +2330,19 @@ footer {
                         font-size: 14px;
                         line-height: 30px;
                     }
+
+                    &:last-child() {
+                        padding-left: 0px;
+                    }
                 }
             }
         }
     }
 
-    .table, #block .table-block {
+    #block .table-block, #txs .table-transaction, .table-producer {
         overflow-x: auto;
         .table-title, .table-body {
-            width: 1000px;
+            width: 1200px;
         }
     }
 

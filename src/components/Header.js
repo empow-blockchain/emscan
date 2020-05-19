@@ -139,7 +139,7 @@ class Header extends Component {
         const { addressInfo } = this.state
         return (
             <ul className="list-inline-app">
-                {addressInfo && <li className="main-menu"><Link to={`/address/${addressInfo.address}`}>{addressInfo.address.substring(0,15) + '...'}</Link></li>}
+                {addressInfo && <li className="main-menu"><Link to={`/address/${addressInfo.address}`}>{addressInfo.address.substring(0, 15) + '...'}</Link></li>}
                 {addressInfo && <li className="main-menu">{Utils.formatCurrency(addressInfo.balance, 2)} EM</li>}
                 <li className="main-menu"><Link to="/">Home</Link></li>
                 <li className="main-menu"><Link to="/blocks">Block</Link></li>
@@ -164,12 +164,14 @@ class Header extends Component {
             <header>
                 {redirectComponent && redirectComponent}
                 <div className="container">
-                    <ul className="top-header">
-                        <li>BLOCK NUMBER: {Utils.formatCurrency(blockNumber)}</li>
-                        <li>TRANSACTION: {Utils.formatCurrency(countTransaction)}</li>
-                        <li>TPS: {txCount}/374</li>
-                        <li>CIRCULATING SUPPLY: {EMTokenInfo ? Utils.formatCurrency(EMTokenInfo.supply, 0) : 0} EM</li>
-                    </ul>
+                    <div className="wrapper">
+                        <ul className="top-header">
+                            <li>BLOCK NUMBER: {Utils.formatCurrency(blockNumber)}</li>
+                            <li>TRANSACTION: {Utils.formatCurrency(countTransaction)}</li>
+                            <li>TPS: {txCount}/374</li>
+                            <li>CIRCULATING SUPPLY: {EMTokenInfo ? Utils.formatCurrency(EMTokenInfo.supply, 0) : 0} EM</li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="navbar">
                     <img onClick={this.showMenu} className="list" src={List} alt="photos"></img>

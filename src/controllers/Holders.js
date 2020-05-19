@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import LoadingIcon from '../assets/images/loading.gif'
-import ActionTag from '../components/ActionTag'
 import Pagination from '../components/Pagination'
 import ServerAPI from '../ServerAPI'
 import Utils from '../utils/index'
-import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
-import { Link } from 'react-router-dom'
 
 class Holders extends Component {
 
