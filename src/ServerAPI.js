@@ -99,7 +99,15 @@ const ServerAPI = {
             .then(res => (resolve(res.data)))
             .catch(error => (reject(error.response.data)))
         })
-    }
+    },
+
+    getAddressByUsername(username) {
+        return new Promise((resolve, reject) => {
+            Axios.get(`${API_ENDPOINT}/getAddressByUsername/${username}`)
+                .then(res => (resolve(res.data)))
+                .catch(error => (reject(error.response.data)))
+        })
+    },
 }
 
 export default ServerAPI;

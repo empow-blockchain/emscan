@@ -117,6 +117,15 @@ class Header extends Component {
                 redirectComponent: <Redirect to={"/tx/" + e.target.value} />
             })
         }
+
+        ServerAPI.getAddressByUsername(e.target.value).then(accountInfo => {
+            if (accountInfo && accountInfo.address) {
+                this.setState({
+                    redirectComponent: <Redirect to={"/address/" + accountInfo.address} />
+                })
+            }
+        }).catch(err => {
+        })
     }
 
     changeNetwork(option) {
