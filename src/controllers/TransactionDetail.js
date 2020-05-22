@@ -13,7 +13,7 @@ import Utils from '../utils/index'
 import moment from 'moment'
 import ButtonCopy from '../components/ButtonCopy'
 import {Link} from 'react-router-dom'
-
+import _ from 'lodash'
 class TransactionDetail extends Component {
 
     constructor(props) {
@@ -28,6 +28,23 @@ class TransactionDetail extends Component {
     };
 
     async componentDidMount() {
+        if (!this.props.match || !this.props.match.params || !this.props.match.params.hash) {
+            return window.location = "/"
+        }
+
+        ServerAPI.getTransaction(this.props.match.params.hash).then(info => {
+            this.setState({ info, isLoading: false })
+        }).catch(() => {
+            this.setState({ notFound: true, isLoading: false })
+        })
+    }
+
+    async componentDidUpdate(prevProps) {
+        if(_.isEqual(prevProps, this.props)) {
+            return;
+        }
+
+
         if (!this.props.match || !this.props.match.params || !this.props.match.params.hash) {
             return window.location = "/"
         }

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import ReactJson from 'react-json-view'
 
 import LoadingIcon from '../assets/images/loading.gif'
-
+import _ from 'lodash'
 import FlagIcon from '../components/FlagIcon'
 import ActionTag from '../components/ActionTag'
 import ActionContent from '../components/ActionContent'
@@ -39,6 +39,43 @@ class Address extends Component {
     };
 
     async componentDidMount() {
+        if (!this.props.match || !this.props.match.params || !this.props.match.params.address) {
+            return window.location = "/"
+        }
+
+        ServerAPI.getAddress(this.props.match.params.address).then(info => {
+            BlockchainAPI.getAddress(info.address).then(accountInfo => {
+                info.gas_info = accountInfo.gas_info
+                this.setState({ info, isLoading: false })
+
+                this.loadGas()
+                if (info.producer_info) this.getProducerInfo(info.address)
+                if (info.frozen_balances.length > 0) {
+                    setInterval(() => this.countDownFrozenBalance(), 1000)
+                }
+            })
+        }).catch(() => {
+            this.setState({ notFound: true, isLoading: false })
+        })
+
+        ServerAPI.getCountAddressTransaction(this.props.match.params.address).then(count => {
+            this.setState({ count })
+        })
+
+        ServerAPI.getAddressTransaction(this.props.match.params.address).then(transactions => {
+            this.setState({ transactions })
+        })
+
+        BlockchainAPI.getRamInfo().then(ramInfo => {
+            this.setState({ ramInfo })
+        })
+    }
+
+    async componentDidUpdate(prevProps) {
+        if(_.isEqual(prevProps, this.props)) {
+            return;
+        }
+
         if (!this.props.match || !this.props.match.params || !this.props.match.params.address) {
             return window.location = "/"
         }
