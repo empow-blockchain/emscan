@@ -229,7 +229,7 @@ class Header extends Component {
                         </div>
                         <div className="noti">
                             <img src={NotiIcon} alt="noti icon"></img>
-                            <div className="html" dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="${EMPO_URL}" target="_blank">Empo - Social Network </a> on Empow Blockchain is ready to test` }}></div>
+                            <div className="html" dangerouslySetInnerHTML={{ __html: `<b>New Update</b>: <a href="${EMPO_URL}" target="_blank">Empow - Social Network </a> on Empow Blockchain is ready` }}></div>
                         </div>
                     </div>
                 </div>
