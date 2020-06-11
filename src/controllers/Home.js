@@ -102,7 +102,7 @@ class HomeController extends Component {
         const { latestBlock } = this.props
         const lastBlock = latestBlock[0]
 
-        if (lastBlock && lastBlock.transactions && lastBlock.tx_count > 1 && latestTransactions[0].hash !== lastBlock.transactions[lastBlock.tx_count - 1].hash) {
+        if (lastBlock && lastBlock.transactions && lastBlock.tx_count > 1 && latestTransactions.length > 0 && latestTransactions[0].hash !== lastBlock.transactions[lastBlock.tx_count - 1].hash) {
 
             for(let i = 1; i < lastBlock.transactions.length; i++) {
                 latestTransactions.unshift(lastBlock.transactions[i])
