@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import WalletSidebar from '../components/WalletSidebar'
 import Input from '../components/Input'
 import Select from 'react-select';
-import {toastr} from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr'
 import Utils from '../utils/index'
 import InstallWalletOverlay from '../components/InstallWalletOverlay';
+import ServerAPI from '../ServerAPI'
 
 class WalletTransfer extends Component {
 
@@ -25,28 +26,60 @@ class WalletTransfer extends Component {
     async componentDidMount() {
     }
 
+    isAddress = (address) => {
+        if (address.length === 49 && address[0] === 'E' && address[1] === 'M') {
+            return true;
+        }
+
+        return false;
+    }
+
     async transfer() {
         this.setState({ isLoading: true })
+        const { tokenSelectValue, to, amount, memo } = this.state
 
-        const {tokenSelectValue, to, amount, memo} = this.state
+        if (!this.isAddress(to)) {
+            ServerAPI.getAddressByUsername(to).then(res => {
+                const tx = window.empow.callABI("token.empow", "transfer", [tokenSelectValue.value, this.props.addressInfo.address, res.address, parseFloat(amount).toFixed(8).toString(), memo])
+                tx.addApprove("*", "unlimited")
+                const handler = window.empow.signAndSend(tx)
 
-        const tx = window.empow.callABI("token.empow", "transfer", [tokenSelectValue.value, this.props.addressInfo.address, to, parseFloat(amount).toFixed(8).toString(), memo])
-        tx.addApprove("*", "unlimited")
-        const handler = window.empow.signAndSend(tx)
+                handler.on("failed", (error) => {
+                    toastr.error('', Utils.getTransactionErrorMessage(error + ""))
+                    this.setState({ isLoading: false })
+                })
 
-        handler.on("failed", (error) => {
-            toastr.error('', Utils.getTransactionErrorMessage(error + ""))
-            this.setState({ isLoading: false })
-        })
-        
-        handler.on("success", (res) => {
-            toastr.success('', "Transfer Success", {
-                component: (
-                    <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
-                )
+                handler.on("success", (res) => {
+                    toastr.success('', "Transfer Success", {
+                        component: (
+                            <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                        )
+                    })
+                    this.setState({ isLoading: false })
+                })
+            }).catch(err => {
+                this.setState({ isLoading: false })
+                return;
             })
-            this.setState({ isLoading: false })
-        })
+        } else {
+            const tx = window.empow.callABI("token.empow", "transfer", [tokenSelectValue.value, this.props.addressInfo.address, to, parseFloat(amount).toFixed(8).toString(), memo])
+            tx.addApprove("*", "unlimited")
+            const handler = window.empow.signAndSend(tx)
+
+            handler.on("failed", (error) => {
+                toastr.error('', Utils.getTransactionErrorMessage(error + ""))
+                this.setState({ isLoading: false })
+            })
+
+            handler.on("success", (res) => {
+                toastr.success('', "Transfer Success", {
+                    component: (
+                        <a target="_blank" rel="noopener noreferrer" href={`/tx/${res.transaction.hash}`}>View Tx</a>
+                    )
+                })
+                this.setState({ isLoading: false })
+            })
+        }
     }
 
     pickAmount(percent) {
