@@ -18,6 +18,8 @@ import BlockchainAPI from '../BlockchainAPI'
 import ButtonCopy from '../components/ButtonCopy'
 import {Link} from 'react-router-dom'
 
+import {ADMIN_ADDRESS} from '../constants/index'
+
 class Address extends Component {
 
     constructor(props) {
@@ -39,7 +41,7 @@ class Address extends Component {
     };
 
     async componentDidMount() {
-        if (!this.props.match || !this.props.match.params || !this.props.match.params.address) {
+        if (!this.props.match || !this.props.match.params || !this.props.match.params.address || this.props.match.params.address === ADMIN_ADDRESS) {
             return window.location = "/"
         }
 
