@@ -30,7 +30,7 @@ const ServerAPI = {
             .catch(error => (reject(error.response.data)))
         })
     },
-    getTopHolders(page = 1, pageSize = 8) {
+    getTopHolders(page = 1, pageSize = 7) {
         return new Promise ( (resolve,reject) => {
             Axios.get(`${API_ENDPOINT}/getAddresses?page=${page}&pageSize=${pageSize}&orderBy=balance&orderType=-1`)
             .then(res => (resolve(res.data)))
