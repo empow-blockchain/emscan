@@ -178,7 +178,7 @@ class Header extends Component {
                             <li>BLOCK NUMBER: {Utils.formatCurrency(blockNumber)}</li>
                             <li>TRANSACTION: {Utils.formatCurrency(countTransaction)}</li>
                             <li>TPS: {txCount}/374</li>
-                            <li>CIRCULATING SUPPLY: {EMTokenInfo ? Utils.formatCurrency(EMTokenInfo.supply, 0) : 0} EM</li>
+                            <li>CIRCULATING SUPPLY: {EMTokenInfo ? Utils.formatCurrency(EMTokenInfo.supply - 4000000000, 0) : 0} EM</li>
                         </ul>
                     </div>
                 </div>
