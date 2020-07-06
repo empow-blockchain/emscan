@@ -103,22 +103,26 @@ class Header extends Component {
         }
     }
 
-    onSearch(e) {
+    onChangeSearch(e) {
         this.setState({ searchValue: e.target.value })
+    }
 
-        if (e.target.value.length === 49 && e.target.value[0] === "E" && e.target.value[1] === "M") {
+    onSearch() {
+        var {searchValue} = this.state
+
+        if (searchValue.length === 49 && searchValue[0] === "E" && searchValue[1] === "M") {
             this.setState({
-                redirectComponent: <Redirect to={"/address/" + e.target.value} />
+                redirectComponent: <Redirect to={"/address/" + searchValue} />
             })
         }
 
-        if (e.target.value.length === 44) {
+        if (searchValue.length === 44) {
             this.setState({
-                redirectComponent: <Redirect to={"/tx/" + e.target.value} />
+                redirectComponent: <Redirect to={"/tx/" + searchValue} />
             })
         }
 
-        ServerAPI.getAddressByUsername(e.target.value).then(accountInfo => {
+        ServerAPI.getAddressByUsername(searchValue).then(accountInfo => {
             if (accountInfo && accountInfo.address) {
                 this.setState({
                     redirectComponent: <Redirect to={"/address/" + accountInfo.address} />
@@ -224,7 +228,8 @@ class Header extends Component {
                     <div className="container">
                         <div className="wrapper-search">
                             <img src={SearchIcon} alt="search icon"></img>
-                            <input onChange={(e) => this.onSearch(e)} value={searchValue} className="input-search" type="text" placeholder="Search address, tx hash, block number and token..." />
+                            <input onChange={(e) => this.onChangeSearch(e)} value={searchValue} className="input-search" type="text" placeholder="Search address, tx hash, block number and token..." />
+                            <button onClick={() => this.onSearch()} className="btn-seach">Search</button>
                             <Select isSearchable={false} className="select-network" classNamePrefix="select-network" value={this.state.networkSelectValue} options={this.state.networkSelectOptions} onChange={(networkSelectValue) => this.changeNetwork(networkSelectValue)}></Select>
                         </div>
                         <div className="noti">

@@ -1192,7 +1192,7 @@ header {
         .wrapper-search {
             position: relative;
             .input-search {
-                width: 100%;
+                width: 80%;
                 background: none;
                 border: 3px solid $navbarColor;
                 height: 70px;
@@ -1210,6 +1210,18 @@ header {
                 left: 15px;
             }
 
+            .btn-seach {
+                background-color: $navbarColor;
+                border-radius: 0px;
+                height: 64px;
+                width: 110px;
+                border: none;
+                color: white;
+                position: absolute;
+                top: 3px;
+                margin-left: 5px;
+                font-size: 18px;
+            }
             .select-network {
                 position: absolute;
                 width: 130px;
