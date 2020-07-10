@@ -11,7 +11,7 @@ const Pagination = props => {
 
     if(count < pageSize) return null;
 
-    const totalPage = Math.floor(count / pageSize) !== 0 ? Math.floor(count / pageSize) : 1
+    const totalPage = Math.ceil(count / pageSize) !== 0 ? Math.ceil(count / pageSize) : 1
     const isFirst = page === 1 ? true : false
     const isLast = page === totalPage ? true : false
     const canNext = page < totalPage
