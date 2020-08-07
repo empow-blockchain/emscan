@@ -23,6 +23,9 @@ import Utils from '../utils';
 import { Link, Redirect } from 'react-router-dom'
 import { EMPO_URL } from '../constants/index'
 import List from '../assets/images/list.svg';
+import ReCAPTCHA from "react-google-recaptcha";
+import { toastr } from 'react-redux-toastr'
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -40,7 +43,11 @@ class Header extends Component {
             addressInfo: null,
             searchValue: "",
             redirectComponent: false,
-            showMenu: false
+            showMenu: false,
+            isAddressActived: true,
+            isLoadingActiveWallet: false,
+            captchaCode: false,
+            typeUsername: "",
         }
     };
 
@@ -84,20 +91,21 @@ class Header extends Component {
 
         if (window.empow) {
             const address = await window.empow.enable()
+            this.setState({
+                myAddress: address
+            })
 
             if (address) {
-
-                let addressInfo = {
-                    address,
-                    balance: 0
-                }
-
-                let result = await ServerAPI.getAddress(address)
-                if (result) addressInfo = result
-
-                this.props.setAddressInfo(addressInfo)
-                this.setState({
-                    addressInfo
+                ServerAPI.getAddress(address).then(addressInfo => {
+                    this.props.setAddressInfo(addressInfo)
+                    this.setState({
+                        addressInfo
+                    })
+                }).catch(err => {
+                    this.setState({
+                        isAddressActived: false
+                    })
+                    return;
                 })
             }
         }
@@ -148,6 +156,63 @@ class Header extends Component {
         })
     }
 
+    activeWallet = async () => {
+        const { captchaCode, typeUsername, myAddress } = this.state
+        const isValid = Utils.checkNormalUsername(typeUsername)
+
+        if (isValid !== true) {
+            return toastr.error('', isValid)
+        }
+
+        if (!captchaCode) {
+            return toastr.error('', "Please check robot")
+        }
+
+        try {
+            var address = await ServerAPI.getAddressByUsername(`newbie.${typeUsername}`)
+            if (address) {
+                return toastr.error('', "This username has already been used")
+            }
+        } catch (e) {
+
+        }
+
+        this.setState({
+            isLoadingActiveWallet: true
+        })
+
+        ServerAPI.activeAddress(myAddress, captchaCode).then(res => {
+            // set username
+            const txBuyUsername = window.empow.callABI("auth.empow", "addNormalUsername", [myAddress, typeUsername])
+            const txSaveUsername = window.empow.callABI("auth.empow", "selectUsername", ["newbie." + typeUsername])
+            Utils.sendAction(txBuyUsername).then(() => {
+                // hide modal
+                this.setState({
+                    isAddressActived: true,
+                })
+
+                Utils.sendAction(txSaveUsername)
+            }).catch(err => {
+                toastr.error('', err)
+            })
+
+            let interval = setInterval(() => {
+                ServerAPI.getAddress(myAddress).then(addressInfo => {
+                    if (addressInfo.username) {
+                        this.setState({
+                            addressInfo
+                        })
+
+                        this.props.setAddressInfo(addressInfo)
+
+                        clearInterval(interval)
+                    }
+                })
+            }, 1000)
+        })
+    }
+
+
     renderMenu() {
         const { addressInfo } = this.state
         return (
@@ -169,9 +234,35 @@ class Header extends Component {
         )
     }
 
+    renderModelActiveAddress() {
+
+        const { isLoadingActiveWallet, typeUsername } = this.state
+
+        return (
+            <div className="overlay">
+                <div className="waper">
+                    <div className="dark-range"></div>
+                    <div className="active-wallet">
+                        <p className="title">Type your username</p>
+                        <div className="input">
+                            <span>newbie.</span>
+                            <input onChange={(e) => this.setState({ typeUsername: e.target.value.toLowerCase() })} value={typeUsername} autoFocus={true} className="username-input" type="text"></input>
+                        </div>
+                        <ReCAPTCHA
+                            sitekey="6LexM9UUAAAAAGIw-3nE_r7cC9hW9A90UoexM1ps"
+                            onChange={(captchaCode) => this.setState({ captchaCode })}
+                            className="recaptcha"
+                        />
+                        <button onClick={() => this.activeWallet()} className="btn-general-1" disabled={isLoadingActiveWallet}>{isLoadingActiveWallet ? "Saving..." : "Save"}</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     render() {
 
-        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo, searchValue, redirectComponent } = this.state
+        const { blockNumber, countTransaction, txCount, EMTokenInfo, addressInfo, searchValue, redirectComponent, isAddressActived, myAddress } = this.state
 
         return (
             <header>
@@ -238,6 +329,8 @@ class Header extends Component {
                         </div>
                     </div>
                 </div>
+
+                {(!isAddressActived && myAddress) && this.renderModelActiveAddress()}
             </header>
         )
     }

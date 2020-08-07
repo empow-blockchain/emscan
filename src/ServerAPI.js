@@ -108,6 +108,14 @@ const ServerAPI = {
                 .catch(error => (reject(error.response.data)))
         })
     },
+
+    activeAddress(myAddress, response) {
+        return new Promise((resolve, reject) => {
+            Axios.post(`${API_ENDPOINT}/activeAddress`, { myAddress, response })
+                .then(res => (resolve(res.data)))
+                .catch(error => (reject(error.response.data)))
+        })
+    },
 }
 
 export default ServerAPI;

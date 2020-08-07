@@ -2283,6 +2283,84 @@ footer {
     }
 }
 
+.overlay {
+    @keyframes overlay {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    left: 0px;
+    top: 0px;
+    animation: overlay 0.3s ease forwards;
+    .waper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .dark-range {
+            width: 100%;
+            position: absolute;
+            height: 100%;
+        }
+       
+        .active-wallet {
+            position: relative;
+            z-index: 3;
+            width: 304px;
+            margin: 150px auto 0px;
+            text-align: center;
+            .title {
+                color: white;
+                font-size: 24px;
+                font-weight: 300;
+            }
+        
+            .input {
+                margin: 10px auto;
+                width: 304px;
+                position: relative;
+                span {
+                    position: absolute;
+                    left: 10px;
+                    top: 13px;
+                    font-weight: 700;
+                    font-size: 16px;
+                }
+                .username-input {
+                    width: 100%;
+                    padding: 10px 20px;
+                    padding-left: 69px;
+                    font-weight: 700;
+                    font-size: 16px;
+                }
+            }
+        
+            .btn-general-1 {
+                margin-top: 10px;
+                height: 31px;
+                border: solid 1px #dd3468;
+                background-color: #dd3468;
+                color: white;
+                cursor: pointer;
+                width: 100%;
+                span {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
 @media (min-width: 1400px) {
     .container {
         max-width: 1270px;

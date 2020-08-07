@@ -69,6 +69,63 @@ const Utils = {
         return string.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
 
+    checkNormalUsername(username) {
+        if(username.length < 6 || username.length > 32) {
+            return "Username length must 6-32 characters"
+        }
+        for (let i in username) {
+            let ch = username[i];
+            if (!(ch >= 'A' && ch <= 'z' || ch >= '0' && ch <= '9')) {
+            }
+        }
+
+        return true
+    },
+
+    sendAction(tx, gasLimit = 100000, type = "success") {
+        return new Promise( (resolve, reject) => {
+            tx.addApprove("*", "unlimited")
+            tx.setGas(1, gasLimit)
+
+            if(!window || !window.empow) {
+                return reject("Please install Empow Wallet Extension")
+            }
+
+            const handler = window.empow.signAndSend(tx)
+    
+            handler.on("failed", async (error) => {
+                // check if pay ram fail -> buy ram
+                let errorMessage = this.getTransactionErrorMessage(error)
+                errorMessage = errorMessage.message ? errorMessage.message : errorMessage
+
+                if(errorMessage.includes("pay ram failed")) {
+                    const ramNeed = errorMessage.match(/need\s(.*),/)[1]
+                    const address = await window.empow.enable()
+                    const txBuyRam = window.empow.callABI("ram.empow", "buy", [address, address, parseInt(ramNeed)])
+
+                    this.sendAction(txBuyRam).then( () => {
+                        this.sendAction(tx).then(res => resolve(res)).catch(error => reject(error))
+                    })
+                } else {
+                    reject(this.getTransactionErrorMessage(error))
+                }
+            })
+            
+            if(type ===  "success") {
+                handler.on("success", (res) => {
+                    resolve(res)
+                })
+            }
+
+            if (type ===  "pending") {
+                handler.on("pending", (tx_hash) => {
+                    resolve({tx_hash})
+                })
+            }
+            
+        })
+    },
+
     convertActionContent: convertActionContent
 }
 
