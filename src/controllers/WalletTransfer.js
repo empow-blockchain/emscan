@@ -16,14 +16,29 @@ class WalletTransfer extends Component {
         this.state = {
             to: "",
             amount: 0,
-            tokenSelectValue: { value: 'em', label: 'EM (EMPOW)' },
-            tokenSelectOptions: [{ value: 'em', label: 'EM (EMPOW)' }],
+            tokenSelectValue: { value: 'em', label: 'EM (EM)' },
+            tokenSelectOptions: [],
             memo: "",
             isLoading: false
         };
     };
 
     async componentDidMount() {
+        this.getTokens()
+
+    }
+
+    getTokens = async () => {
+        var tokens = await ServerAPI.getTokens()
+        var result = []
+        tokens.forEach(token => {
+            if (token.canTransfer && !token.onlyIssuerCanTransfer) {
+                result.push({ value: token.symbol, label: `${token.symbol.toUpperCase()} (${token.fullName.toUpperCase()})` })
+            }
+        });
+        this.setState({
+            tokenSelectOptions: result
+        })
     }
 
     isAddress = (address) => {
@@ -83,14 +98,23 @@ class WalletTransfer extends Component {
     }
 
     pickAmount(percent) {
-        this.setState({
-            amount: this.props.addressInfo.balance * (percent / 100)
-        })
+        var { tokenSelectValue } = this.state
+        if (tokenSelectValue.value !== 'em') {
+            var amount = this.props.addressInfo.token[tokenSelectValue.value] || 0
+            this.setState({
+                amount: amount * (percent / 100)
+            })
+        } else {
+            this.setState({
+                amount: this.props.addressInfo.balance * (percent / 100)
+            })
+        }
+
     }
 
     render() {
 
-        const { to, amount, memo, isLoading } = this.state
+        const { to, amount, memo, isLoading, tokenSelectValue } = this.state
         const { addressInfo } = this.props
 
         return (
@@ -106,19 +130,20 @@ class WalletTransfer extends Component {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <Input className="to" title="Transfer To" type="text" value={to} onChange={(e) => this.setState({ to: e.target.value })}></Input>
-                                        <Input className="amount" title="Amount" type="text" value={amount} onChange={(e) => this.setState({ amount: e.target.value })} suffix="EM"></Input>
+                                        <Input className="amount" title="Amount" type="text" value={amount} onChange={(e) => this.setState({ amount: e.target.value })} suffix={tokenSelectValue.value.toUpperCase()}></Input>
                                         <ul className="pick-amount list-inline">
                                             <li onClick={() => this.pickAmount(25)}>25%</li>
                                             <li onClick={() => this.pickAmount(50)}>50%</li>
                                             <li onClick={() => this.pickAmount(75)}>75%</li>
                                             <li onClick={() => this.pickAmount(100)}>100%</li>
                                         </ul>
-                                        <p className="balance time">Balance: {addressInfo ? addressInfo.balance : 0} EM</p>
+                                        {tokenSelectValue.value === "em" && <p className="balance time">Balance: {addressInfo ? addressInfo.balance : 0} {tokenSelectValue.value.toUpperCase()}</p>}
+                                        {tokenSelectValue.value !== "em" && <p className="balance time">Balance: {addressInfo  ? (addressInfo.token[tokenSelectValue.value] || 0) : 0} {tokenSelectValue.value.toUpperCase()}</p>}
                                     </div>
                                     <div className="col-md-6">
                                         <div className="token">
                                             <span className="label">SELECT TOKEN</span>
-                                            <Select className="select-token" classNamePrefix="select-token" value={this.state.tokenSelectValue} options={this.state.tokenSelectOptions} onChange={(tokenSelectValue) => this.setState({ tokenSelectValue })}></Select>
+                                            <Select className="select-token" classNamePrefix="select-token" value={this.state.tokenSelectValue} options={this.state.tokenSelectOptions} onChange={(tokenSelectValue) => this.setState({ tokenSelectValue, amount: 0 })}></Select>
                                         </div>
                                         <Input className="memo" title="Memo" optional={true} type="text" value={memo} placeholder="Send a message to the recipient..." onChange={(e) => this.setState({ memo: e.target.value })}></Input>
                                     </div>

@@ -46,6 +46,7 @@ class Address extends Component {
         }
 
         ServerAPI.getAddress(this.props.match.params.address).then(info => {
+            this.checkFrozenBalance(info)
             BlockchainAPI.getAddress(info.address).then(accountInfo => {
                 info.gas_info = accountInfo.gas_info
                 this.setState({ info, isLoading: false })
@@ -108,6 +109,26 @@ class Address extends Component {
         BlockchainAPI.getRamInfo().then(ramInfo => {
             this.setState({ ramInfo })
         })
+    }
+
+    checkFrozenBalance (info) {
+        for (let i = 0; i < info.frozen_balances.length; i++) {
+            if (info.frozen_balances[i].time > new Date().getTime() * 10 ** 6) {
+                ServerAPI.updateAddress(this.props.match.params.address)
+
+                let interval = setInterval( () => {
+                    ServerAPI.getAddress(info.address).then(accountInfo => {
+                        if (accountInfo.frozen_balances.length !== info.frozen_balances.length) {
+                            this.setState({
+                                info: accountInfo
+                            })
+                            clearInterval(interval)
+                        }
+                    })
+                },1000)
+                return;
+            }
+        }
     }
 
     loadGas() {
