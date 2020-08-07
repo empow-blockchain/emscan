@@ -76,6 +76,7 @@ const Utils = {
         for (let i in username) {
             let ch = username[i];
             if (!(ch >= 'A' && ch <= 'z' || ch >= '0' && ch <= '9')) {
+                return "username invalid. username contains invalid character > " + ch
             }
         }
 
