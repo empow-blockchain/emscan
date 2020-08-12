@@ -93,7 +93,8 @@ class Producer extends Component {
                                                 <li>
                                                     <div className="status">
                                                         {value.status === 0 && <div className="status-pending">Pending</div>}
-                                                        {value.status === 1 && <div className="status-success">Ready</div>}
+                                                        {(value.status === 1 && !value.online) && <div className="status-error">Offline</div>}
+                                                        {(value.status === 1 && value.online) && <div className="status-success">Ready</div>}
                                                         {(value.status === 2 || value.statue === 3) && <div className="status-error">Not Ready</div>}
                                                     </div>
                                                 </li>
