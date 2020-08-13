@@ -12,7 +12,7 @@ import Utils from '../utils/index'
 import moment from 'moment'
 import LoadingOverlay from 'react-loading-overlay';
 import BlockchainAPI from '../BlockchainAPI';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import _ from 'lodash'
 import { ADMIN_ADDRESS } from '../constants';
 
@@ -42,15 +42,15 @@ class HomeController extends Component {
         })
     }
 
-    async componentDidUpdate (prevProps) {
-        if(_.isEqual(prevProps, this.props)) {
+    async componentDidUpdate(prevProps) {
+        if (_.isEqual(prevProps, this.props)) {
             return;
         }
     }
 
     renderLatestBlock() {
 
-        let { listProducer,latestBlock } = this.props
+        let { listProducer, latestBlock } = this.props
 
         if (listProducer.length === 0 || latestBlock.length === 0) return;
 
@@ -62,7 +62,7 @@ class HomeController extends Component {
                 <ul className="list-inline table-body">
                     {latestBlock.map((value, index) => {
                         let producer = listProducer.filter(producer => { return producer.pubkey === value.witness })
-                        if(producer.length === 0) return null
+                        if (producer.length === 0) return null
                         let countryCode = producer[0].loc ? producer[0].loc.toLowerCase() : "us"
                         let avatar = producer[0].avatar ? producer[0].avatar : "https://ipfs.infura.io/ipfs/QmefC1ttiGQbTjzyqNLQmv7FKRR7cVwJBi64SzUJcPTmjH"
                         let name = producer[0].name ? producer[0].name : producer[0].pubkey
@@ -104,7 +104,7 @@ class HomeController extends Component {
 
         if (lastBlock && lastBlock.transactions && lastBlock.tx_count > 1 && latestTransactions.length > 0 && latestTransactions[0].hash !== lastBlock.transactions[lastBlock.tx_count - 1].hash) {
 
-            for(let i = 1; i < lastBlock.transactions.length; i++) {
+            for (let i = 1; i < lastBlock.transactions.length; i++) {
                 latestTransactions.unshift(lastBlock.transactions[i])
                 latestTransactions.pop()
             }
@@ -147,7 +147,7 @@ class HomeController extends Component {
     renderTopHolder() {
 
         const { topHolders } = this.state
-        const {listProducer} = this.props
+        const { listProducer } = this.props
 
         return (
             <div className="table table-holder">
@@ -192,7 +192,7 @@ class HomeController extends Component {
     renderProducer() {
 
         const { totalVote } = this.state
-        const {listProducer} = this.props
+        const { listProducer } = this.props
 
         return (
             <div className="table table-producer">
@@ -251,7 +251,8 @@ class HomeController extends Component {
                                         <li>
                                             <div className="status">
                                                 {value.status === 0 && <div className="status-pending">Pending</div>}
-                                                {value.status === 1 && <div className="status-success">Ready</div>}
+                                                {(value.status === 1 && !value.online) && <div className="status-error">Offline</div>}
+                                                {(value.status === 1 && value.online) && <div className="status-success">Ready</div>}
                                                 {(value.status === 2 || value.statue === 3) && <div className="status-error">Not Ready</div>}
                                             </div>
                                         </li>
@@ -289,7 +290,7 @@ class HomeController extends Component {
         return (
             <LoadingOverlay
                 active={this.state.isLoading}
-                spinner={<img src={LoadingIcon} alt="LoadingIcon"/>}
+                spinner={<img src={LoadingIcon} alt="LoadingIcon" />}
                 className="loading-overlay"
             >
                 <section id="home">
