@@ -224,7 +224,7 @@ class Header extends Component {
                 <li className="main-menu"><Link to="/producer">Producer</Link></li>
                 <li className="main-menu"><Link to="/wallet/stake">Stake</Link></li>
                 <li className="main-menu"><Link to="/txs">Txs</Link></li>
-                {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
+                {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/bglmfiihjjbjolgjpflcdklccdlcidgn" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
 
                 {addressInfo && <li className="main-menu"><Link to="/wallet/gas">Gas</Link></li>}
                 {addressInfo && <li className="main-menu"><Link to="/wallet/ram">Ram</Link></li>}
@@ -289,7 +289,7 @@ class Header extends Component {
                             <li className="main-menu"><Link to="/producer">Producer</Link></li>
                             <li className="main-menu"><Link to="/wallet/stake">Stake</Link></li>
                             <li className="main-menu"><Link to="/txs">Txs</Link></li>
-                            {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/empow-wallet/nlgnepoeokdfodgjkjiblkadkjbdfmgd" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
+                            {!addressInfo && <li className="main-menu"><a href="https://chrome.google.com/webstore/detail/bglmfiihjjbjolgjpflcdklccdlcidgn" rel="noopener noreferrer" target="_blank" className="btn-download"><img src={DownloadIcon} alt="download icon" /> Install Wallet</a></li>}
                             {addressInfo &&
                                 <li className="main-menu dropdown">
                                     <div className="line"></div>
