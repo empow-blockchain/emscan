@@ -25,19 +25,14 @@ class WalletStake extends Component {
             hasWithdraw: 0,
             canWithdraw: 0,
             percentPerDay: 0.000833333333,
-            blockPerDay: 172800,
-            lastBlockNumber: 0,
+            oneDayNano: 24 * 60 * 60 * 10**9,
             hideUnstaked: false
         };
     };
 
     componentDidMount() {
-        ServerAPI.getBlocks(1, 1).then(block => {
-            this.setState({ lastBlockNumber: block[0].number })
-
-            this.getStakeInfo()
-            this.calcWithdrawCountdown()
-        })
+        this.getStakeInfo()
+        this.calcWithdrawCountdown()
     }
 
 
@@ -71,14 +66,14 @@ class WalletStake extends Component {
             let totalStaking = 0
 
             for (let i = 0; i < listStake.length; i++) {
-                listStake[i].hasWithdraw = this.calcHasWithdraw(listStake[i].amount, listStake[i].startBlock, listStake[i].lastBlockWithdraw)
+                listStake[i].hasWithdraw = this.calcHasWithdraw(listStake[i].amount, listStake[i].startTime, listStake[i].lastWithdrawTime)
                 hasWithdraw += listStake[i].hasWithdraw
 
                 if (listStake[i].unstake === true) {
                     packageUnstaked++
                     listStake[i].canWithdraw = 0
                 } else {
-                    listStake[i].canWithdraw = this.calcCanWithdraw(listStake[i].amount, listStake[i].lastBlockWithdraw)
+                    listStake[i].canWithdraw = this.calcCanWithdraw(listStake[i].amount, listStake[i].lastWithdrawTime)
                     canWithdraw += listStake[i].canWithdraw
                     totalStaking += parseFloat(listStake[i].amount)
                 }
@@ -119,19 +114,22 @@ class WalletStake extends Component {
         }, 1000)
     }
 
-    calcHasWithdraw(amount, startBlock, lastBlockWithdraw) {
-        const { percentPerDay, blockPerDay } = this.state
+    calcHasWithdraw(amount, startTime, lastWithdrawTime) {
+        const { percentPerDay, oneDayNano } = this.state
 
-        const totalDayWithdraw = Math.floor((lastBlockWithdraw - startBlock) / blockPerDay)
+        const totalDayWithdraw = Math.floor((lastWithdrawTime - startTime) / oneDayNano)
         const interestAmountPerDay = amount * percentPerDay
 
         return totalDayWithdraw * interestAmountPerDay > 0 ? totalDayWithdraw * interestAmountPerDay : 0
     }
 
-    calcCanWithdraw(amount, lastBlockWithdraw) {
-        const { percentPerDay, blockPerDay, lastBlockNumber } = this.state
+    calcCanWithdraw(amount, lastWithdrawTime) {
 
-        const totalDayCanWithdraw = Math.floor((lastBlockNumber - lastBlockWithdraw) / blockPerDay)
+
+        const { percentPerDay, oneDayNano } = this.state
+        const now = new Date().getTime() * 10**6
+
+        const totalDayCanWithdraw = Math.floor((now - lastWithdrawTime) / oneDayNano)
         const interestAmountPerDay = amount * percentPerDay
 
         return totalDayCanWithdraw * interestAmountPerDay > 0 ? totalDayCanWithdraw * interestAmountPerDay : 0
