@@ -8,6 +8,8 @@ export default function (contract, action_name, data, tx_receipt, fromPage = "ho
 
     let content = ""
 
+    if(!tx_receipt) return <p className="error-message">Tx has been rollbacked</p>
+
     if(tx_receipt.status_code !== "SUCCESS") {
         return <p className="error-message"><span className="title">{tx_receipt.status_code}</span> {Utils.getTransactionErrorMessage(tx_receipt.message)}</p>
     }
