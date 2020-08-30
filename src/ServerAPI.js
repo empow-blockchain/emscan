@@ -23,7 +23,7 @@ const ServerAPI = {
             .catch(error => (reject(error.response.data)))
         })
     },
-    getTransactions(page = 1, pageSize = 7, orderBy = "blockNumber", orderType = -1) {
+    getTransactions(page = 1, pageSize = 7, orderBy = "time", orderType = -1) {
         return new Promise ( (resolve,reject) => {
             Axios.get(`${API_ENDPOINT}/getTransactions/true?page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderType=${orderType}`)
             .then(res => (resolve(res.data)))
